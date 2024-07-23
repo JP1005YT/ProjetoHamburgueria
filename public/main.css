@@ -1,0 +1,16 @@
+.select {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.select select {
+  width: 100%;
+}
+
+.person-prod {
+  width: 70%;
+}
+
+.person-total {
+  width: 90%;
+  text-align: end;
+}/*# sourceMappingURL=main.css.map */

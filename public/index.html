@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="theme-light"></html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Home</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  </head>
+<body>
+    <div class="content">
+      <nav class="navbar is-spaced is-size-5 has-shadow" role="navigation">
+        <div class="navbar-menu is-active">
+          <div class="navbar-start is-centered" style="width: 100%; justify-content: center;">
+            <a class="navbar-item">Pedidos</a>
+            <a class="navbar-item">Clientes</a>
+            <a class="navbar-item">Produtos</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="container is-widescreen">
+        <form class="box">
+          <h1 class="title is-2">Novo Pedido</h1>
+          <label class="label">Cliente</label>
+          <div class="select">
+            <select>
+              <option>Selecione um cliente</option>
+              <option>With options</option>
+            </select>
+          </div>
+          <label class="label">Produtos</label>
+          <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th class="person-prod has-text-centered"><abbr title="Produto">Prod</abbr></th>
+                <th class="has-text-centered"><abbr title="Quantidade">Qnt</abbr></th>
+                <th class="has-text-centered"><abbr title="Valor">Val</abbr></th>
+                <th class="has-text-centered"><abbr title="Subtotal">SubT</abbr></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tfoot>
+              <th colspan="4" class="has-text-right">Total: 95,94</th>
+            <tbody>
+              <tr>
+                <td>X-salada</td>
+                <td class="has-text-right">2</td>
+                <td class="has-text-right">15,99</td>
+                <td class="has-text-right">31,98</td>
+                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+              <tr>
+                <td>X-salada</td>
+                <td class="has-text-right">2</td>
+                <td class="has-text-right">15,99</td>
+                <td class="has-text-right">31,98</td>
+                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+              <tr>
+                <td>X-salada</td>
+                <td class="has-text-right">2</td>
+                <td class="has-text-right">15,99</td>
+                <td class="has-text-right">31,98</td>
+                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="field is-grouped">
+            <p class="control">
+              <button class="button is-link">
+                Adicionar
+              </button>
+            </p>
+            <!-- <p class="control title is-3 person-total">
+              Total: R$95,94
+            </p> -->
+          </div>
+          <div class="field is-grouped is-grouped-right">
+            <p class="control">
+              <button class="button is-primary">
+                Finalizar
+              </button>
+            </p>
+            <p class="control">
+              <a class="button is-light">
+                Cancelar
+              </a>
+            </p>
+          </div>
+          </form>
+    </div>
+</body>
+</html>
