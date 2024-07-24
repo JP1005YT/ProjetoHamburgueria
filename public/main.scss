@@ -1,8 +1,16 @@
-.select{
+.person-field{
     width: 100%;
-    margin-bottom: 12px;
-    select{
-        width: 100%;
+    .one{
+        width: 90%;
+        .select,select{
+            width: 100%;
+        }
+    }
+    .two{
+        width: 10%;
+        button{
+            width: 100%;
+        }
     }
 }
 .person-prod{
@@ -11,4 +19,29 @@
 .person-total{
     width: 90%;
     text-align: end;
+}
+.person-modal-footer{
+    display: block;
+}
+.person-modal-card{
+    width: 90%;
+    height: 80%;
+}
+.person-modal-body{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    .card{
+        width: 15%;
+        list-style: none;
+        overflow: hidden;
+        margin-bottom: 24px;
+        img{
+            object-fit: cover;
+        }
+        p{
+            margin: 10px;
+        }
+    }
 }

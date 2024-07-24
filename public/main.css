@@ -1,8 +1,16 @@
-.select {
+.person-field {
   width: 100%;
-  margin-bottom: 12px;
 }
-.select select {
+.person-field .one {
+  width: 90%;
+}
+.person-field .one .select, .person-field .one select {
+  width: 100%;
+}
+.person-field .two {
+  width: 10%;
+}
+.person-field .two button {
   width: 100%;
 }
 
@@ -13,4 +21,33 @@
 .person-total {
   width: 90%;
   text-align: end;
+}
+
+.person-modal-footer {
+  display: block;
+}
+
+.person-modal-card {
+  width: 90%;
+  height: 80%;
+}
+
+.person-modal-body {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.person-modal-body .card {
+  width: 15%;
+  list-style: none;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.person-modal-body .card img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.person-modal-body .card p {
+  margin: 10px;
 }/*# sourceMappingURL=main.css.map */

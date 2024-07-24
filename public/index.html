@@ -25,11 +25,20 @@
         <form class="box">
           <h1 class="title is-2">Novo Pedido</h1>
           <label class="label">Cliente</label>
-          <div class="select">
-            <select>
-              <option>Selecione um cliente</option>
-              <option>With options</option>
-            </select>
+          <div class="field has-addons person-field">
+            <div class="control one">
+              <div class="select">
+                <select>
+                  <option>Selecione um cliente</option>
+                  <option>With options</option>
+                </select>
+              </div>
+            </div>
+            <div class="control two">
+              <button class="button is-info">
+                <i class='bx bx-search-alt-2' style="font-size: 24px;"></i>
+              </button>
+            </div>
           </div>
           <label class="label">Produtos</label>
           <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
@@ -68,13 +77,10 @@
           </table>
           <div class="field is-grouped">
             <p class="control">
-              <button class="button is-link">
+              <button class="button is-link" onclick="switchModal()">
                 Adicionar
               </button>
             </p>
-            <!-- <p class="control title is-3 person-total">
-              Total: R$95,94
-            </p> -->
           </div>
           <div class="field is-grouped is-grouped-right">
             <p class="control">
@@ -90,5 +96,101 @@
           </div>
           </form>
     </div>
+    <div class="modal">
+      <div class="modal-background" onclick="switchModal()"></div>
+      <div class="modal-card person-modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Selecione os produtos</p>
+          <button class="delete" aria-label="close" onclick="switchModal()"></button>
+        </header>
+        <section class="modal-card-body person-modal-body">
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+          <li class="card">
+            <figure class="image is-square">
+              <img src="Hamburger.jpg" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">Hamburger Special Do Chef</p>
+          </li>
+        </section>
+        <footer class="modal-card-foot person-modal-footer">
+          <div class="buttons is-right">
+            <button class="button is-success" onclick="switchModal()">Salvar</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script>
+      function switchModal(){
+        document.querySelector(".modal").classList.toggle("is-active")
+      }
+      document.querySelector("form").addEventListener("submit",(e) => {
+        e.preventDefault()
+      })
+    </script>
 </body>
 </html>
