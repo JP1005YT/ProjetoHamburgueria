@@ -13,6 +13,9 @@
         }
     }
 }
+.person-w{
+    width: 100%;
+}
 .person-prod{
     width: 70%;
 }
@@ -43,5 +46,39 @@
         p{
             margin: 10px;
         }
+    }
+}
+.person-abbottom{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+.person-btn-theme{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    z-index: 100;
+    margin: 8px;
+    font-size: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.person-head{
+    position: relative;
+}
+.active{
+    display: block;
+}
+.disable{
+    display: none;
+}
+@media (max-width: 1023px){
+    .person-btn-theme{
+        display: none;
     }
 }

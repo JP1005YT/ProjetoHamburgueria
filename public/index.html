@@ -3,206 +3,288 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Home</title>
+    <title>Pedidos</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
   </head>
 <body>
-    <div class="content">
+  <div class="content person-head">
+    <div class="person-btn-theme has-shadow" onclick="changeTheme()">
+      <i class='bx bxs-brightness-half'></i>
+    </div>
       <nav class="navbar is-spaced is-size-5 has-shadow" role="navigation">
         <div class="navbar-menu is-active">
           <div class="navbar-start is-centered" style="width: 100%; justify-content: center;">
-            <a class="navbar-item">Pedidos</a>
-            <a class="navbar-item">Clientes</a>
-            <a class="navbar-item">Produtos</a>
+            <a class="navbar-item is-active ">Pedidos</a>
+            <a class="navbar-item ml-5">Clientes</a>
+            <a class="navbar-item ml-5">Produtos</a>
           </div>
         </div>
       </nav>
-    </div>
-    <div class="container is-widescreen">
-        <form class="box">
-          <h1 class="title is-2">Novo Pedido</h1>
-          <label class="label">Cliente</label>
-          <div class="field has-addons person-field">
-            <div class="control one">
-              <div class="select">
-                <select>
-                  <option>Selecione um cliente</option>
-                  <option>With options</option>
-                </select>
-              </div>
-            </div>
-            <div class="control two">
-              <button class="button is-info">
-                <i class='bx bx-search-alt-2' style="font-size: 24px;"></i>
-              </button>
+  </div>
+  <div class="container is-widescreen active" id="novoPedido">
+      <form class="box">
+        <h1 class="title is-2">Novo Pedido</h1>
+        <label class="label">Cliente</label>
+        <div class="field has-addons person-field">
+          <div class="control one">
+            <div class="select">
+              <select>
+                <option>Selecione um cliente</option>
+                <option>With options</option>
+              </select>
             </div>
           </div>
-          <label class="label">Forma de Pagamento</label>
-          <div class="select">
-            <select>
-              <option>Selecione o método de pagamento</option>
-              <option>Pix</option>
-              <option>Cartão</option>
-              <option>Cardeneta</option>
-            </select>
+          <div class="control two">
+            <button class="button is-info">
+              <i class='bx bx-search-alt-2' style="font-size: 24px;"></i>
+            </button>
           </div>
-          <label class="label">Observações</label>
-          <input class="input" type="text" placeholder="Obs" />
-          <label class="label">Produtos</label>
-          <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-              <tr>
-                <th class="person-prod has-text-centered"><abbr title="Produto">Prod</abbr></th>
-                <th class="has-text-centered"><abbr title="Quantidade">Qnt</abbr></th>
-                <th class="has-text-centered"><abbr title="Valor">Val</abbr></th>
-                <th class="has-text-centered"><abbr title="Subtotal">SubT</abbr></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tfoot>
-              <th colspan="4" class="has-text-right">Total: 95,94</th>
-            <tbody>
-              <tr>
-                <td>X-salada</td>
-                <td class="has-text-right">2</td>
-                <td class="has-text-right">15,99</td>
-                <td class="has-text-right">31,98</td>
-                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-              <tr>
-                <td>X-salada</td>
-                <td class="has-text-right">2</td>
-                <td class="has-text-right">15,99</td>
-                <td class="has-text-right">31,98</td>
-                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-              <tr>
-                <td>X-salada</td>
-                <td class="has-text-right">2</td>
-                <td class="has-text-right">15,99</td>
-                <td class="has-text-right">31,98</td>
-                <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="field is-grouped">
-            <p class="control">
-              <button class="button is-link" onclick="switchModal()">
-                Adicionar
-              </button>
-            </p>
-          </div>
-          <div class="field is-grouped is-grouped-right">
-            <p class="control">
-              <button class="button is-primary">
-                Finalizar
-              </button>
-            </p>
-            <p class="control">
-              <a class="button is-light">
-                Cancelar
-              </a>
-            </p>
-          </div>
-          </form>
+        </div>
+        <label class="label">Forma de Pagamento</label>
+        <div class="select person-w">
+          <select class="person-w">
+            <option>Pix</option>
+            <option>Cartão</option>
+            <option>Cardeneta</option>
+          </select>
+        </div>
+        <label class="label">Observações</label>
+        <input class="input" type="text" placeholder="Obs" />
+        <label class="label">Produtos</label>
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th class="person-prod has-text-centered"><abbr title="Produto">Prod</abbr></th>
+              <th class="has-text-centered"><abbr title="Quantidade">Qnt</abbr></th>
+              <th class="has-text-centered"><abbr title="Valor">Val</abbr></th>
+              <th class="has-text-centered"><abbr title="Subtotal">SubT</abbr></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tfoot>
+            <th colspan="4" class="has-text-right">Total: 95,94</th>
+          <tbody>
+            <tr>
+              <td>X-salada</td>
+              <td class="has-text-right">2</td>
+              <td class="has-text-right">15,99</td>
+              <td class="has-text-right">31,98</td>
+              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+            <tr>
+              <td>X-salada</td>
+              <td class="has-text-right">2</td>
+              <td class="has-text-right">15,99</td>
+              <td class="has-text-right">31,98</td>
+              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+            <tr>
+              <td>X-salada</td>
+              <td class="has-text-right">2</td>
+              <td class="has-text-right">15,99</td>
+              <td class="has-text-right">31,98</td>
+              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="field is-grouped">
+          <p class="control">
+            <button class="button is-link" onclick="switchModal()">
+              Adicionar
+            </button>
+          </p>
+        </div>
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <button class="button is-primary">
+              Finalizar
+            </button>
+          </p>
+          <p class="control">
+            <a class="button is-light">
+              Cancelar
+            </a>
+          </p>
+        </div>
+        </form>
+  </div>
+  <div class="container is-widescreen disable" id="listaPedido">
+    <div class="box">
+      <h1 class="title is-2">Todos Pedidos</h1>
+      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+        <thead>
+          <tr>
+            <th class="person-prod has-text-centered"><abbr title="Numero do Pedido">N.Ped</abbr></th>
+            <th class="has-text-centered"><abbr title="Metodo de Pagamento">M. Pag</abbr></th>
+            <th class="has-text-centered"><abbr title="Items do Pedido">I. Ped</abbr></th>
+            <th class="has-text-centered"><abbr title="Data Pedido">Data Pedido</abbr></th>
+            <th class="has-text-centered"><abbr title="Valor Total">Val</abbr></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tfoot>
+          <th colspan="4" class="has-text-right">Total: 3 Pedidos</th>
+        <tbody>
+          <tr>
+            <td>0001</td>
+            <td class="has-text-right">Pix</td>
+            <td class="has-text-right">3</td>
+            <td class="has-text-right">25/07/2024</td>
+            <td class="has-text-right">56,00</td>
+            <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+          </tr>
+          <tr>
+              <td>0002</td>
+              <td class="has-text-right">Cartão</td>
+              <td class="has-text-right">2</td>
+              <td class="has-text-right">25/07/2024</td>
+              <td class="has-text-right">22,00</td>
+              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+          </tr>
+            <tr>
+                <td>0003</td>
+                <td class="has-text-right">Pix</td>
+                <td class="has-text-right">4</td>
+                <td class="has-text-right">25/07/2024</td>
+                <td class="has-text-right">132,54</td>
+            <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="modal">
-      <div class="modal-background" onclick="switchModal()"></div>
-      <div class="modal-card person-modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Selecione os produtos</p>
-          <button class="delete" aria-label="close" onclick="switchModal()"></button>
-        </header>
-        <section class="modal-card-body person-modal-body">
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-          <li class="card">
-            <figure class="image is-square">
-              <img src="Hamburger.jpg" alt="Hamburger" />
-            </figure>
-            <p class="has-text-centered">Hamburger Special Do Chef</p>
-          </li>
-        </section>
-        <footer class="modal-card-foot person-modal-footer">
-          <div class="buttons is-right">
-            <button class="button is-success" onclick="switchModal()">Salvar</button>
-          </div>
-        </footer>
-      </div>
+
+  </div>
+  <div class="columns person-abbottom">
+    <div class="column"></div>
+    <div class="column is-half">
+      <button class="button is-link is-outlined is-large person-w" onclick="changeMode()" id="switchButton">Meus Pedidos</button>
     </div>
-    <script>
-      function switchModal(){
-        document.querySelector(".modal").classList.toggle("is-active")
+    <div class="column"></div>
+  </div>
+  <div class="modal">
+    <div class="modal-background" onclick="switchModal()"></div>
+    <div class="modal-card person-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Selecione os produtos</p>
+        <button class="delete" aria-label="close" onclick="switchModal()"></button>
+      </header>
+      <section class="modal-card-body person-modal-body">
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+      </section>
+      <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="switchModal()">Salvar</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <script>
+    let modoNovo = true
+    function switchModal(){
+      document.querySelector(".modal").classList.toggle("is-active")
+    }
+    document.querySelector("form").addEventListener("submit",(e) => {
+      e.preventDefault()
+    })
+    function changeMode(){
+      if(modoNovo){
+        document.querySelector("#novoPedido").classList.remove("active")
+        document.querySelector("#novoPedido").classList.add("disable")
+        document.querySelector("#listaPedido").classList.remove("disable")
+        document.querySelector("#listaPedido").classList.add("active")
+        modoNovo = false
+        document.querySelector("#switchButton").innerHTML = "Novo Pedido"
+      }else{
+        document.querySelector("#novoPedido").classList.remove("disable")
+        document.querySelector("#novoPedido").classList.add("active")
+        document.querySelector("#listaPedido").classList.remove("active")
+        document.querySelector("#listaPedido").classList.add("disable")
+        modoNovo = true
+        document.querySelector("#switchButton").innerHTML = "Meus Pedido"
       }
-      document.querySelector("form").addEventListener("submit",(e) => {
-        e.preventDefault()
-      })
-    </script>
-    <script src="main.js"></script>
+    }
+    function changeTheme(){
+      let themaAtual = document.querySelector("html").classList.value
+      if(themaAtual == "theme-light"){
+        document.querySelector("html").classList.value = "theme-dark"
+      }else{
+        document.querySelector("html").classList.value = "theme-light"
+      }
+    }
+  </script>
+  <script src="main.js"></script>
 </body>
 </html>
