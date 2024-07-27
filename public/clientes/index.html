@@ -48,86 +48,25 @@
     <div class="modal-background" onclick="switchModal()"></div>
     <div class="modal-card person-modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Selecione os produtos</p>
+        <p class="modal-card-title">Editar Cliente</p>
         <button class="delete" aria-label="close" onclick="switchModal()"></button>
       </header>
-      <section class="modal-card-body person-modal-body">
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
+      <section class="modal-card-body">
+        <form class="box" id="formEdit">
+          <input class="input" type="text" id="id" name="id" style="display: none;">
+          <label class="label">Nome</label>
+          <input class="input" type="text" id="nome" name="nome">
+          <label class="label">Telefone</label>
+          <input class="input" type="text" id="telefone" name="telefone">
+          <label class="label">Endereço</label>
+          <input class="input" type="text" id="endereco" name="endereco">
+          <label class="label">Data de Nascimento</label>
+          <input class="input" type="date" id="dtnasc" name="dtnasc">
+        </form>
       </section>
       <footer class="modal-card-foot person-modal-footer">
         <div class="buttons is-right">
-          <button class="button is-success" onclick="switchModal()">Salvar</button>
+          <button class="button is-success" onclick="confirmarEdicao()">Editar</button>
         </div>
       </footer>
     </div>
@@ -151,22 +90,26 @@
       carregarClientes()
     }
     function carregarClientes(){
-      clienteData.forEach(cliente => {
+      clienteData.forEach((cliente,index) => {
         const newTR = document.createElement("tr")
         Object.keys(cliente).forEach(coluna => {
           const newTD = document.createElement("td")
-          newTD.innerHTML = cliente[coluna]
+          if(coluna === "dtnasc"){
+            newTD.innerHTML = formatDateToDDMMYYYY(secondsToDate(cliente[coluna]))
+          }else{
+            newTD.innerHTML = cliente[coluna]
+          }
           newTR.appendChild(newTD)
         })
         const editBtn = document.createElement("td")
         const delBtn = document.createElement("td")
 
         editBtn.addEventListener("click",(e) => {
-          editarModal(cliente.id)
+          editarModal(index)
         })
 
         delBtn.addEventListener("click",(e) => {
-          delModal(cliente.id)
+          delModal(index)
         })
 
         editBtn.classList.add("has-text-centered")
@@ -183,8 +126,76 @@
     }
     loadData()
 
-    function editarModal(id){
+    function editarModal(indexof){
       switchModal()
+      Object.keys(clienteData[indexof]).forEach( coluna => {
+        if(coluna === "dtnasc"){
+          document.querySelector(`#formEdit #${coluna}`).value = secondsToDate(clienteData[indexof][coluna])
+        }else{
+          document.querySelector(`#formEdit #${coluna}`).value = clienteData[indexof][coluna]
+        }
+      })
+    }
+
+    function delModal(indexof){
+      if(confirm("Deseja excluir o cliente " + clienteData[indexof].nome + "?")){
+        confirmarDel(clienteData[indexof].id)
+      }else{
+        return
+      }
+    }
+
+    async function confirmarDel(id){
+      const data = {id : id}
+      const result = fetch('./../delClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+        if(result.error){
+          alert("notifique o administrador")
+        }else{
+          window.location.reload()
+        }
+    }
+    async function confirmarEdicao(){
+      const formData = new FormData(document.querySelector("#formEdit"))
+      const data = Object.fromEntries(formData.entries());
+      
+      data.dtnasc = dateToSeconds(data.dtnasc)
+
+      async function sendToServer(data){
+        const result = fetch('./../editClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+        return result
+      }
+      
+      const resp =  await sendToServer(data)
+      if(resp.error){
+        alert("contate o administrador")
+      }else{
+        window.location.reload();
+      }
+    }
+
+    function secondsToDate(seconds) {
+      const date = new Date(seconds * 1000);
+      return date.toISOString().split('T')[0];
+    }
+    function dateToSeconds(dateString) {
+      const date = new Date(dateString);
+      return Math.floor(date.getTime() / 1000);
+    }
+    function formatDateToDDMMYYYY(dateString) {
+      const [year, month, day] = dateString.split('-');
+      return `${day}/${month}/${year}`;
     }
   </script>
   <script src="./../main.js"></script>
