@@ -3,12 +3,12 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Pedidos</title>
+    <title>Clientes</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
     <link rel='stylesheet' type='text/css' media='screen' href='./../main.css'>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="./../favicon.ico">
   </head>
 <body>
   <div class="content person-head">
@@ -31,27 +31,160 @@
       <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
           <tr>
+            <th class="has-text-centered"><abbr title="Id">Id</abbr></th>
             <th class="has-text-centered"><abbr title="Nome">Nome</abbr></th>
             <th class="has-text-centered"><abbr title="Telefone">Telefone</abbr></th>
             <th class="has-text-centered"><abbr title="Endereço">Endereço</abbr></th>
             <th class="has-text-centered"><abbr title="Data Nascimento">Data Nascimento</abbr></th>
             <th></th>
+            <th></th>
           </tr>
         </thead>
-        <tr>
-          <td>ROBSON SILVA JUNIOR</td>
-          <td class="has-text-right">18000000000</td>
-          <td class="has-text-right">Rua Siqueira Campos 283</td>
-          <td class="has-text-right">01/01/2000</td>
-          <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-        <tr>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
   </div>
+  <div class="modal">
+    <div class="modal-background" onclick="switchModal()"></div>
+    <div class="modal-card person-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Selecione os produtos</p>
+        <button class="delete" aria-label="close" onclick="switchModal()"></button>
+      </header>
+      <section class="modal-card-body person-modal-body">
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+        <li class="card">
+          <figure class="image is-square">
+            <img src="Hamburger.jpg" alt="Hamburger" />
+          </figure>
+          <p class="has-text-centered">Hamburger Special Do Chef</p>
+        </li>
+      </section>
+      <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="switchModal()">Salvar</button>
+        </div>
+      </footer>
+    </div>
+  </div>
   <script>
+    let clienteData
+    function switchModal(){
+      document.querySelector(".modal").classList.toggle("is-active")
+    }
     function changePages(local){
       window.location.href = './' + local
+    }
+    async function loadData(){
+      const dados = await fetch('./../getClientes',{
+        method: "GET",
+      });
+      clienteData = await dados.json();
+      loadDOM()
+    }
+    async function loadDOM(){
+      carregarClientes()
+    }
+    function carregarClientes(){
+      clienteData.forEach(cliente => {
+        const newTR = document.createElement("tr")
+        Object.keys(cliente).forEach(coluna => {
+          const newTD = document.createElement("td")
+          newTD.innerHTML = cliente[coluna]
+          newTR.appendChild(newTD)
+        })
+        const editBtn = document.createElement("td")
+        const delBtn = document.createElement("td")
+
+        editBtn.addEventListener("click",(e) => {
+          editarModal(cliente.id)
+        })
+
+        delBtn.addEventListener("click",(e) => {
+          delModal(cliente.id)
+        })
+
+        editBtn.classList.add("has-text-centered")
+        delBtn.classList.add("has-text-centered")
+
+        editBtn.innerHTML = "<i class='bx bxs-edit' ></i>"
+        delBtn.innerHTML = "<i class='bx bx-trash' ></i>"
+
+        newTR.appendChild(editBtn)
+        newTR.appendChild(delBtn)
+
+        document.querySelector("tbody").appendChild(newTR)
+      });
+    }
+    loadData()
+
+    function editarModal(id){
+      switchModal()
     }
   </script>
   <script src="./../main.js"></script>

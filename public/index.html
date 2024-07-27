@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css">
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
   </head>
 <body>
   <div class="content person-head">
@@ -30,6 +30,15 @@
         <h1 class="title is-2">Novo Pedido</h1>
         <label class="label">Cliente</label>
         <div class="field has-addons person-field">
+          <div class="control three">
+            <div class="select">
+              <select id="FilterClientes">
+                <option value="nome">Nome</option>
+                <option value="telefone">Telefone</option>
+                <option value="endereco">Endereco</option>
+              </select>
+            </div>
+          </div>
           <div class="control one">
             <div class="select">
               <select id="ListOfClients">
@@ -39,16 +48,16 @@
           </div>
           <div class="control two">
             <button class="button is-info">
-              <i class='bx bx-search-alt-2' style="font-size: 24px;"></i>
+              <i class='bx bx-user-plus' style="font-size: 24px;"></i>
             </button>
           </div>
         </div>
         <label class="label">Forma de Pagamento</label>
         <div class="select person-w">
           <select class="person-w">
-            <option>Pix</option>
-            <option>Cartão</option>
-            <option>Cardeneta</option>
+            <option value="0">0 - Pix</option>
+            <option value="1">1 - Cartão</option>
+            <option value="2">2 - Cardeneta</option>
           </select>
         </div>
         <label class="label">Observações</label>
@@ -252,11 +261,15 @@
   </div>
   <script>
     let modoNovo = true
+    let clienteData
     function switchModal(){
       document.querySelector(".modal").classList.toggle("is-active")
     }
     document.querySelector("form").addEventListener("submit",(e) => {
       e.preventDefault()
+    })
+    document.querySelector("#FilterClientes").addEventListener("change",(e) => {
+      carregarClientes()
     })
     function changeMode(){
       if(modoNovo){
@@ -278,9 +291,28 @@
     function changePages(local){
       window.location.href = './' + local
     }
-    function loadClientes(){
-      const listclientsDOM = document.querySelector("#ListOfClients")
+    async function loadData(){
+      const dados = await fetch('./getClientes',{
+        method: "GET",
+      });
+      clienteData = await dados.json();
+      loadDOM()
     }
+    async function loadDOM(){
+      carregarClientes()
+    }
+    function carregarClientes(){
+      const filter = document.querySelector("#FilterClientes").value
+      const listclientsDOM = document.querySelector("#ListOfClients")
+      listclientsDOM.innerHTML = ""
+      clienteData.forEach(cliente => {
+        const novaOpc = document.createElement("option")
+        novaOpc.innerHTML = `${cliente[filter]}`
+        novaOpc.value = cliente.id
+        listclientsDOM.appendChild(novaOpc)
+      });
+    }
+    loadData()
   </script>
   <script src="main.js"></script>
 </body>

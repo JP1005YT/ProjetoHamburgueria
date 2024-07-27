@@ -3,7 +3,7 @@ const { open } = require('sqlite');
 
 async function openDatabase() {
   return open({
-    filename: './server/modules/bd.db',
+    filename: './server/bd/bd.db',
     driver: sqlite3.Database
   });
 }

@@ -2,7 +2,7 @@
   width: 100%;
 }
 .person-field .one {
-  width: 90%;
+  width: 80%;
 }
 .person-field .one .select, .person-field .one select {
   width: 100%;
@@ -11,6 +11,12 @@
   width: 10%;
 }
 .person-field .two button {
+  width: 100%;
+}
+.person-field .three {
+  width: 10%;
+}
+.person-field .three .select, .person-field .three select {
   width: 100%;
 }
 
