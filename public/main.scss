@@ -77,6 +77,24 @@
 .disable{
     display: none;
 }
+.person-box{
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+    flex-wrap: wrap;
+    .card{
+        width: 15%;
+        list-style: none;
+        overflow: hidden;
+        margin-bottom: 24px;
+        img{
+            object-fit: cover;
+        }
+        p{
+            margin: 10px;
+        }
+    }
+}
 @media (max-width: 1023px){
     .person-btn-theme{
         display: none;

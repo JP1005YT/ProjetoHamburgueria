@@ -90,6 +90,26 @@
   display: none;
 }
 
+.person-box {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.person-box .card {
+  width: 15%;
+  list-style: none;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.person-box .card img {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.person-box .card p {
+  margin: 10px;
+}
+
 @media (max-width: 1023px) {
   .person-btn-theme {
     display: none;

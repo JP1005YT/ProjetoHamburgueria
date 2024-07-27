@@ -50,42 +50,10 @@
     </div>
   </div>
   <script>
-    let modoNovo = true
-    function switchModal(){
-      document.querySelector(".modal").classList.toggle("is-active")
-    }
-    document.querySelector("form").addEventListener("submit",(e) => {
-      e.preventDefault()
-    })
-    function changeMode(){
-      if(modoNovo){
-        document.querySelector("#novoPedido").classList.remove("active")
-        document.querySelector("#novoPedido").classList.add("disable")
-        document.querySelector("#listaPedido").classList.remove("disable")
-        document.querySelector("#listaPedido").classList.add("active")
-        modoNovo = false
-        document.querySelector("#switchButton").innerHTML = "Novo Pedido"
-      }else{
-        document.querySelector("#novoPedido").classList.remove("disable")
-        document.querySelector("#novoPedido").classList.add("active")
-        document.querySelector("#listaPedido").classList.remove("active")
-        document.querySelector("#listaPedido").classList.add("disable")
-        modoNovo = true
-        document.querySelector("#switchButton").innerHTML = "Meus Pedido"
-      }
-    }
-    function changeTheme(){
-      let themaAtual = document.querySelector("html").classList.value
-      if(themaAtual == "theme-light"){
-        document.querySelector("html").classList.value = "theme-dark"
-      }else{
-        document.querySelector("html").classList.value = "theme-light"
-      }
-    }
     function changePages(local){
       window.location.href = './' + local
     }
   </script>
-  <script src="main.js"></script>
+  <script src="./../main.js"></script>
 </body>
 </html>

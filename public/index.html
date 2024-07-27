@@ -32,9 +32,8 @@
         <div class="field has-addons person-field">
           <div class="control one">
             <div class="select">
-              <select>
+              <select id="ListOfClients">
                 <option>Selecione um cliente</option>
-                <option>With options</option>
               </select>
             </div>
           </div>
@@ -276,16 +275,11 @@
         document.querySelector("#switchButton").innerHTML = "Meus Pedido"
       }
     }
-    function changeTheme(){
-      let themaAtual = document.querySelector("html").classList.value
-      if(themaAtual == "theme-light"){
-        document.querySelector("html").classList.value = "theme-dark"
-      }else{
-        document.querySelector("html").classList.value = "theme-light"
-      }
-    }
     function changePages(local){
       window.location.href = './' + local
+    }
+    function loadClientes(){
+      const listclientsDOM = document.querySelector("#ListOfClients")
     }
   </script>
   <script src="main.js"></script>
