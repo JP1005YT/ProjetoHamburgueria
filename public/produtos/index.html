@@ -25,6 +25,13 @@
         </div>
       </nav>
   </div>
+  <div class="columns">
+    <div class="column"></div>
+    <div class="column is-half">
+      <button class="button is-link is-outlined is-large person-w" onclick="switchModal()" id="switchButton">Novo Produto</button>
+    </div>
+    <div class="column"></div>
+  </div>
   <div class="container is-widescreen" id="listaPedido">
     <div class="box person-box">
       <li class="card">
@@ -101,10 +108,81 @@
       </li>
     </div>
   </div>
+  <div class="modal">
+    <div class="modal-background" onclick="switchModal()"></div>
+    <div class="modal-card person-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Novo Produto</p>
+        <button class="delete" aria-label="close" onclick="switchModal()"></button>
+      </header>
+      <section class="modal-card-body person-modalBodyProducts">
+        <form class="form" id="productForm">
+          <label class="label">Descrição</label>
+          <input class="input" type="text" id="descriptionInput">
+          <label class="label">Valor</label>
+          <input class="input" type="number" step="0.01" id="moneyInput">
+          <div class="file is-primary person-imageInput">
+              <label class="file-label">
+                  <input class="file-input" type="file" name="resume" id="fileInput"/>
+                  <span class="file-cta">
+                      <span class="file-icon">
+                          <i class='bx bx-image-add'></i>
+                      </span>
+                      <span class="file-label">Adicionar Imagem</span>
+                  </span>
+              </label>
+          </div>
+      </form>
+      </section>
+      <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="salvarNovoProduto()">Salvar</button>
+        </div>
+      </footer>
+    </div>
+  </div>
   <script>
     function changePages(local){
       window.location.href = './' + local
     }
+    function switchModal(){
+      document.querySelector(".modal").classList.toggle("is-active")
+    }
+    const moneyInput = document.getElementById('moneyInput');
+
+    moneyInput.addEventListener('input', (event) => {
+      const value = parseFloat(event.target.value).toFixed(2);
+      console.log(`R$ ${value}`);
+    });
+
+    async function salvarNovoProduto(){
+      const description = document.getElementById('descriptionInput').value;
+      const value = document.getElementById('moneyInput').value;
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (!description || !value || !file) {
+          alert("Por favor, preencha todos os campos.");
+          return;
+      }
+
+      const formData = new FormData();
+      formData.append('description', description);
+      formData.append('value', value);
+      formData.append('file', file);
+
+      sendFormToServer(formData);
+    }
+
+  function sendFormToServer(formData) {
+    fetch('./../newProduto', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Erro:', error));
+  }
   </script>
   <script src="./../main.js"></script>
 </body>

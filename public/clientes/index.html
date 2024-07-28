@@ -184,19 +184,6 @@
         window.location.reload();
       }
     }
-
-    function secondsToDate(seconds) {
-      const date = new Date(seconds * 1000);
-      return date.toISOString().split('T')[0];
-    }
-    function dateToSeconds(dateString) {
-      const date = new Date(dateString);
-      return Math.floor(date.getTime() / 1000);
-    }
-    function formatDateToDDMMYYYY(dateString) {
-      const [year, month, day] = dateString.split('-');
-      return `${day}/${month}/${year}`;
-    }
   </script>
   <script src="./../main.js"></script>
 </body>

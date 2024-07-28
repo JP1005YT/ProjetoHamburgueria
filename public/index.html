@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="control two">
-            <button class="button is-info">
+            <button class="button is-info" onclick="switchModalTwo()">
               <i class='bx bx-user-plus' style="font-size: 24px;"></i>
             </button>
           </div>
@@ -259,11 +259,35 @@
       </footer>
     </div>
   </div>
+  <div class="modal Two">
+    <div class="modal-background" onclick="switchModalTwo()"></div>
+    <div class="modal-card person-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Adicionar Cliente</p>
+        <button class="delete" aria-label="close" onclick="switchModalTwo()"></button>
+      </header>
+      <section class="modal-card-body">
+        <form class="box" id="formNew">
+          <label class="label">Nome</label>
+          <input class="input" type="text" id="nome" name="nome">
+          <label class="label">Telefone</label>
+          <input class="input" type="text" id="telefone" name="telefone">
+          <label class="label">Endereço</label>
+          <input class="input" type="text" id="endereco" name="endereco">
+          <label class="label">Data de Nascimento</label>
+          <input class="input" type="date" id="dtnasc" name="dtnasc">
+        </form>
+      </section>
+    </div>
+  </div>
   <script>
     let modoNovo = true
     let clienteData
     function switchModal(){
       document.querySelector(".modal").classList.toggle("is-active")
+    }
+    function switchModalTwo(){
+      document.querySelector(".modal.Two").classList.toggle("is-active")
     }
     document.querySelector("form").addEventListener("submit",(e) => {
       e.preventDefault()
@@ -304,8 +328,9 @@
     function carregarClientes(){
       const filter = document.querySelector("#FilterClientes").value
       const listclientsDOM = document.querySelector("#ListOfClients")
+      const listaOrdenada = ordenarPorNome(clienteData)
       listclientsDOM.innerHTML = ""
-      clienteData.forEach(cliente => {
+      listaOrdenada.forEach(cliente => {
         const novaOpc = document.createElement("option")
         novaOpc.innerHTML = `${cliente[filter]}`
         novaOpc.value = cliente.id
@@ -313,6 +338,31 @@
       });
     }
     loadData()
+    async function SalvarCliente(){
+      const formData = new FormData(document.querySelector("#formNew"))
+      const data = Object.fromEntries(formData.entries());
+
+      data.dtnasc = dateToSeconds(data.dtnasc)
+
+      async function sendToServer(data){
+        const result = fetch('./../newClient', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+        return result
+      }
+
+      const resultado = await sendToServer(data)
+
+      if(resultado.error){
+        alert("erro informe o administrador")
+      }else{
+        window.location.reload()
+      }
+    }
   </script>
   <script src="main.js"></script>
 </body>

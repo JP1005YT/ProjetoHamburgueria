@@ -1,7 +1,22 @@
 const express = require("express")
 const bodyParser = require('body-parser')
 const { createRecord, readRecords, updateRecord, deleteRecord } = require("./modules/sqliteManager")
+const uuid = require("uuid")
+const multer = require('multer');
+const path = require('path');
 const app = express()
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'public/images/');
+    },
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      const name = uuid.v4() + ext;
+      cb(null, name);
+    }
+});
+const upload = multer({ storage });
 
 app.use(express.static('public'))
 app.use(bodyParser.json())
@@ -43,3 +58,23 @@ app.post("/delClient",async (req,res) => {
         res.status(402).send({error : true})
     }
 })
+
+app.post("/newClient",async (req,res) => {
+    const data = req.body
+    try{
+        await createRecord('clientes', data)
+        res.status(200).send({error : false})
+    }catch{
+        res.status(402).send({error : true})
+    }
+})
+
+app.post('/newProduto', upload.single('file'), (req, res) => {
+    const { description, value } = req.body;
+    const file = req.file;
+  
+    // Faça o que for necessário com os dados recebidos
+    console.log(description, value, file);
+  
+    res.json({ message: 'Produto salvo com sucesso!' });
+  });

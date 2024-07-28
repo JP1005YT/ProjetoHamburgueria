@@ -116,6 +116,12 @@
   margin: 10px;
 }
 
+.person-imageInput {
+  width: 100%;
+  margin-top: 24px;
+  position: absolute;
+}
+
 @media (max-width: 1023px) {
   .person-btn-theme {
     display: none;

@@ -13,5 +13,21 @@ function changeTheme(theme){
       document.querySelector("html").classList.value = "theme-" + theme
     }
   }
-  let memoryTheme = window.localStorage.getItem('theme')
-  changeTheme(memoryTheme)
+let memoryTheme = window.localStorage.getItem('theme')
+changeTheme(memoryTheme)
+
+function secondsToDate(seconds) {
+  const date = new Date(seconds * 1000);
+  return date.toISOString().split('T')[0];
+}
+function dateToSeconds(dateString) {
+  const date = new Date(dateString);
+  return Math.floor(date.getTime() / 1000);
+}
+function formatDateToDDMMYYYY(dateString) {
+  const [year, month, day] = dateString.split('-');
+  return `${day}/${month}/${year}`;
+}
+function ordenarPorNome(arr) {
+  return arr.sort((a, b) => a.nome.localeCompare(b.nome));
+}
