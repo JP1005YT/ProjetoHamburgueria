@@ -77,13 +77,14 @@
       </header>
       <section class="modal-card-body person-modalBodyProducts">
         <form class="form" id="productForm">
+          <input class="input" type="text" id="idInputEditar" style="display:none" name="idInputEditar">
           <label class="label">Descrição</label>
-          <input class="input" type="text" id="descriptionInputEditar">
+          <input class="input" type="text" id="descriptionInputEditar" name="descriptionInputEditar">
           <label class="label">Valor</label>
-          <input class="input" type="number" step="0.01" id="moneyInputEditar">
+          <input class="input" type="number" step="0.01" id="moneyInputEditar" name="moneyInputEditar">
           <div class="file is-primary person-imageInput">
               <label class="file-label">
-                  <input class="file-input" type="file" name="resume" id="fileInput"/>
+                  <input class="file-input" type="file" name="resume" id="fileInputEdit"/>
                   <span class="file-cta">
                       <span class="file-icon">
                           <i class='bx bx-image-add'></i>
@@ -96,7 +97,7 @@
       </section>
       <footer class="modal-card-foot person-modal-footer">
         <div class="buttons is-right">
-          <button class="button is-success" onclick="">Salvar</button>
+          <button class="button is-success" onclick="editarProduto() ">Salvar</button>
         </div>
       </footer>
     </div>
@@ -137,7 +138,34 @@
 
       sendFormToServer(formData);
     }
+    async function editarProduto(){
+      const id = document.querySelector("#idInputEditar").value
+      const description = document.querySelector("#descriptionInputEditar").value
+      const value = document.querySelector("#moneyInputEditar").value
+      const file = document.querySelector("#fileInputEdit").files[0]
 
+      if (!description || !value || !file) {
+          alert("Por favor, preencha todos os campos.");
+          return;
+      }
+
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('description', description);
+      formData.append('value', value);
+      formData.append('file', file);
+
+      sendFormToServerEdit(formData)
+    }
+    function sendFormToServerEdit(formData){
+      fetch('./../editProduto', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => window.location.reload())
+    .catch(error => alert(error));
+    }
     function sendFormToServer(formData) {
     fetch('./../newProduto', {
       method: 'POST',
@@ -179,6 +207,7 @@
   
     function mostrarModalEditar(id){
       switchModalEditar()
+      document.querySelector("#idInputEditar").value = produtosData[id].id
       document.querySelector("#descriptionInputEditar").value = produtosData[id].descricao
       document.querySelector("#moneyInputEditar").value = produtosData[id].valor
     }

@@ -50,6 +50,11 @@ app.post("/editClient",async (req,res) => {
     }
 })
 
+app.post("/editProduto", upload.single('file'),async (req,res) => {
+    const { id, description, value } = req.body;
+    console.log(req.body)
+})
+
 app.post("/delClient",async (req,res) => {
     const {id} = req.body
     try{
