@@ -33,82 +33,9 @@
     <div class="column"></div>
   </div>
   <div class="container is-widescreen" id="listaPedido">
-    <div class="box person-box">
-      <li class="card">
-        <figure class="image is-square">
-          <img src="./../Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-      <li class="card">
-        <figure class="image is-square">
-          <img src="Hamburger.jpg" alt="Hamburger" />
-        </figure>
-        <p class="has-text-centered">Hamburger Special Do Chef</p>
-      </li>
-    </div>
+    <div class="box person-box" id="mostrarProdutos"></div>
   </div>
-  <div class="modal">
+  <div class="modal new">
     <div class="modal-background" onclick="switchModal()"></div>
     <div class="modal-card person-modal-card">
       <header class="modal-card-head">
@@ -141,12 +68,49 @@
       </footer>
     </div>
   </div>
+  <div class="modal edit">
+    <div class="modal-background" onclick="switchModalEditar()"></div>
+    <div class="modal-card person-modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Editar Produto</p>
+        <button class="delete" aria-label="close" onclick="switchModalEditar()"></button>
+      </header>
+      <section class="modal-card-body person-modalBodyProducts">
+        <form class="form" id="productForm">
+          <label class="label">Descrição</label>
+          <input class="input" type="text" id="descriptionInputEditar">
+          <label class="label">Valor</label>
+          <input class="input" type="number" step="0.01" id="moneyInputEditar">
+          <div class="file is-primary person-imageInput">
+              <label class="file-label">
+                  <input class="file-input" type="file" name="resume" id="fileInput"/>
+                  <span class="file-cta">
+                      <span class="file-icon">
+                          <i class='bx bx-image-add'></i>
+                      </span>
+                      <span class="file-label">Editar Imagem</span>
+                  </span>
+              </label>
+          </div>
+      </form>
+      </section>
+      <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="">Salvar</button>
+        </div>
+      </footer>
+    </div>
+  </div>
   <script>
+    let produtosData
     function changePages(local){
       window.location.href = './' + local
     }
     function switchModal(){
-      document.querySelector(".modal").classList.toggle("is-active")
+      document.querySelector(".modal.new").classList.toggle("is-active")
+    }
+    function switchModalEditar(){
+      document.querySelector(".modal.edit").classList.toggle("is-active")
     }
     const moneyInput = document.getElementById('moneyInput');
 
@@ -174,15 +138,69 @@
       sendFormToServer(formData);
     }
 
-  function sendFormToServer(formData) {
+    function sendFormToServer(formData) {
     fetch('./../newProduto', {
       method: 'POST',
       body: formData
     })
     .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Erro:', error));
+    .then(data => window.location.reload())
+    .catch(error => alert(error));
   }
+
+    async function carregarProdutos(){
+      const dados = await fetch('./../getProdutos',{
+        method: "GET",
+      });
+      produtosData = await dados.json();
+      construirDOM()
+    }
+    function construirDOM(){
+      produtosData.forEach((produto,index) => {
+        const parser = new DOMParser();
+        const htmlString = `
+          <li class="card">
+            <figure class="image is-square">
+              <img src="./../images/${produto.image}" alt="Hamburger" />
+            </figure>
+            <p class="has-text-centered">${produto.descricao} R$${produto.valor}</p>
+            <footer class="card-footer">
+              <a class="card-footer-item" onclick="mostrarModalEditar(${index})">Editar</a>
+              <a class="card-footer-item" onclick="deletarProduto(${index})">Deletar</a>
+            </footer>
+          </li>
+        `;
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const nodeObject = doc.body.firstChild;
+        document.querySelector("#mostrarProdutos").appendChild(nodeObject)
+      });
+    }
+    carregarProdutos()
+  
+    function mostrarModalEditar(id){
+      switchModalEditar()
+      document.querySelector("#descriptionInputEditar").value = produtosData[id].descricao
+      document.querySelector("#moneyInputEditar").value = produtosData[id].valor
+    }
+    function deletarProduto(index){
+      const data = {
+        id : produtosData[index].id,
+        imageUrl : produtosData[index].image
+      }
+
+      const result = fetch('./../delProduto', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }).then(response => response.json())
+        if(result.error){
+          alert("notifique o administrador")
+        }else{
+          window.location.reload()
+        }
+    }
   </script>
   <script src="./../main.js"></script>
 </body>

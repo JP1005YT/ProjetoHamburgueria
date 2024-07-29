@@ -4,6 +4,7 @@ const { createRecord, readRecords, updateRecord, deleteRecord } = require("./mod
 const uuid = require("uuid")
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs')
 const app = express()
 
 const storage = multer.diskStorage({
@@ -59,6 +60,18 @@ app.post("/delClient",async (req,res) => {
     }
 })
 
+app.post("/delProduto",async (req,res) => {
+    const {id,imageUrl} = req.body
+    const filePath = './public/images/' + imageUrl
+    fs.unlinkSync(filePath);
+    try{
+        await deleteRecord('produtos',id)
+        res.status(200).send({error : false})
+    }catch{
+            res.status(402).send({error : true})
+        }
+})
+
 app.post("/newClient",async (req,res) => {
     const data = req.body
     try{
@@ -69,12 +82,19 @@ app.post("/newClient",async (req,res) => {
     }
 })
 
-app.post('/newProduto', upload.single('file'), (req, res) => {
+app.post('/newProduto', upload.single('file'), async (req, res) => {
     const { description, value } = req.body;
     const file = req.file;
   
-    // Faça o que for necessário com os dados recebidos
-    console.log(description, value, file);
-  
-    res.json({ message: 'Produto salvo com sucesso!' });
-  });
+    const data = {
+        descricao : description,
+        valor : value,
+        image : file.filename
+    }
+    try{
+        await createRecord('produtos', data)
+        res.status(200).send({error : false})
+    }catch{
+        res.status(402).send({error : true})
+    }
+});
