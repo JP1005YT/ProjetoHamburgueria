@@ -144,15 +144,23 @@
       const value = document.querySelector("#moneyInputEditar").value
       const file = document.querySelector("#fileInputEdit").files[0]
 
-      if (!description || !value || !file) {
+      if (!description || !value) {
           alert("Por favor, preencha todos os campos.");
           return;
       }
+
+      let old_image
+      produtosData.forEach(prod => {
+        if(prod.id == id){
+          old_image = prod.image
+        }
+      })
 
       const formData = new FormData();
       formData.append('id', id);
       formData.append('description', description);
       formData.append('value', value);
+      formData.append('oldImage',old_image)
       formData.append('file', file);
 
       sendFormToServerEdit(formData)

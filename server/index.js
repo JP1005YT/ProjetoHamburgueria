@@ -51,8 +51,30 @@ app.post("/editClient",async (req,res) => {
 })
 
 app.post("/editProduto", upload.single('file'),async (req,res) => {
-    const { id, description, value } = req.body;
-    console.log(req.body)
+    const { id, description, value ,oldImage} = req.body;
+
+    
+    let imageName
+    if(req.file){
+        const filePath = './public/images/' + oldImage
+        fs.unlinkSync(filePath);
+        imageName = req.file.filename;
+    }else{
+        imageName = oldImage
+    }
+
+    const productData = {
+        descricao : description,
+        valor : value,
+        image : imageName
+    }
+
+    try{
+        await updateRecord("produtos",id,productData)
+        res.status(200).send({error : false})
+    }catch{
+        res.status(402).send({error : true})
+    }
 })
 
 app.post("/delClient",async (req,res) => {

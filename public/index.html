@@ -75,26 +75,7 @@
           </thead>
           <tfoot>
             <th colspan="4" class="has-text-right">Taxa de Entrega: 10,50 Total: 95,94</th>
-          <tbody>
-            <tr>
-              <td>X-salada</td>
-              <td class="has-text-right">2</td>
-              <td class="has-text-right">15,99</td>
-              <td class="has-text-right">31,98</td>
-              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-            <tr>
-              <td>X-salada</td>
-              <td class="has-text-right">2</td>
-              <td class="has-text-right">15,99</td>
-              <td class="has-text-right">31,98</td>
-              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-            <tr>
-              <td>X-salada</td>
-              <td class="has-text-right">2</td>
-              <td class="has-text-right">15,99</td>
-              <td class="has-text-right">31,98</td>
-              <td class="has-text-centered"><i class='bx bxs-trash-alt' ></i></td>
-            </tr>
+          <tbody id="tableProdutos">
           </tbody>
         </table>
         <div class="field is-grouped">
@@ -178,83 +159,11 @@
         <p class="modal-card-title">Selecione os produtos</p>
         <button class="delete" aria-label="close" onclick="switchModal()"></button>
       </header>
-      <section class="modal-card-body person-modal-body">
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
-        <li class="card">
-          <figure class="image is-square">
-            <img src="Hamburger.jpg" alt="Hamburger" />
-          </figure>
-          <p class="has-text-centered">Hamburger Special Do Chef</p>
-        </li>
+      <section class="modal-card-body person-modal-body" id="prodBox">
       </section>
       <footer class="modal-card-foot person-modal-footer">
         <div class="buttons is-right">
-          <button class="button is-success" onclick="switchModal()">Salvar</button>
+          <button class="button is-success" onclick="syncSelectAndTable()">Salvar</button>
         </div>
       </footer>
     </div>
@@ -282,7 +191,8 @@
   </div>
   <script>
     let modoNovo = true
-    let clienteData
+    let clienteData , produtosData
+    let produtosSelecionados = {}
     function switchModal(){
       document.querySelector(".modal").classList.toggle("is-active")
     }
@@ -320,10 +230,15 @@
         method: "GET",
       });
       clienteData = await dados.json();
+      const dadosProd = await fetch('./getProdutos',{
+        method: "GET",
+      });
+      produtosData = await dadosProd.json();
       loadDOM()
     }
     async function loadDOM(){
       carregarClientes()
+      carregarProdutos()
     }
     function carregarClientes(){
       const filter = document.querySelector("#FilterClientes").value
@@ -335,6 +250,63 @@
         novaOpc.innerHTML = `${cliente[filter]}`
         novaOpc.value = cliente.id
         listclientsDOM.appendChild(novaOpc)
+      });
+    }
+    function carregarProdutos(){
+      produtosData.forEach((produto,index) => {
+        const parser = new DOMParser();
+        const htmlString = `
+          <li class="card person-card-prod" prod-id="${produto.id}">
+            <figure class="image is-square">
+              <img src="./../images/${produto.image}" alt="Hamburger" />
+            </figure>
+            <span class='display' id='count'>0</span>
+            <p class="has-text-centered">${produto.descricao} R$${produto.valor}</p>
+          </li>
+        `;
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const nodeObject = doc.body.firstChild;
+        nodeObject.addEventListener("mouseenter",(e) => {
+          e.target.classList.add("hover")
+        })
+        nodeObject.addEventListener("mouseleave",(e) => {
+          e.target.classList.remove("hover")
+        })
+        nodeObject.addEventListener("click",(e) => {
+          nodeObject.classList.add("clicked")
+          id = nodeObject.getAttribute('prod-id')
+          if(produtosSelecionados[id] === undefined){
+            console.log('nao existe')
+            produtosSelecionados[id] = 1
+          }else{
+            produtosSelecionados[id] += 1
+          }
+
+          atualizarDisplay()
+        })
+        nodeObject.addEventListener("contextmenu",(e) => {
+          e.preventDefault()
+          
+          id = nodeObject.getAttribute('prod-id')
+          if(produtosSelecionados[id] > 0){
+            if(produtosSelecionados[id] == 1){
+              nodeObject.classList.remove("clicked")
+              produtosSelecionados[id] -= 1
+            }else{
+              produtosSelecionados[id] -= 1
+            }
+          }
+          atualizarDisplay()
+        })
+        function atualizarDisplay(){
+          idsSelecionados = Object.keys(produtosSelecionados)
+          idsSelecionados.forEach(id => {
+            if(nodeObject.getAttribute('prod-id') == id){
+              nodeObject.querySelector(".display").innerHTML = produtosSelecionados[id]
+            }
+          })
+        }
+        document.querySelector("#prodBox").appendChild(nodeObject)
       });
     }
     loadData()
@@ -363,6 +335,33 @@
         window.location.reload()
       }
     }
+    
+    function syncSelectAndTable(){
+      document.querySelector("#tableProdutos").innerHTML = ''
+      Object.keys(produtosSelecionados).forEach(idProduto => {
+        produtosData.forEach(produto => {
+          if(produto.id == idProduto && produtosSelecionados[idProduto] > 0){
+            const htmlString = `
+            <tr>
+              <td>${produto.descricao}</td>
+              <td class="has-text-right">${produtosSelecionados[idProduto]}</td>
+              <td class="has-text-right">${produto.valor}</td>
+              <td class="has-text-right">${produto.valor * produtosSelecionados[idProduto]}</td>
+              <td class="has-text-centered"><i class='bx bxs-trash-alt'></i></td>
+            </tr>`;
+
+            const template = document.createElement('template');
+            template.innerHTML = htmlString.trim(); // Usar .trim() para remover espaços em branco extras
+
+            const nodeObject = template.content.firstElementChild;
+
+            document.querySelector("#tableProdutos").appendChild(nodeObject)
+          }
+        })
+      })
+      switchModal()
+    }
+  
   </script>
   <script src="main.js"></script>
 </body>
