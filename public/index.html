@@ -62,6 +62,8 @@
         </div>
         <label class="label">Observações</label>
         <input class="input" type="text" placeholder="Obs" />
+        <label class="label">Taxa de Entrega</label>
+        <input class="input" id="taxEntrega" type="number" value="00.00"/>
         <label class="label">Produtos</label>
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
           <thead>
@@ -74,7 +76,7 @@
             </tr>
           </thead>
           <tfoot>
-            <th colspan="4" class="has-text-right">Taxa de Entrega: 10,50 Total: 95,94</th>
+            <th colspan="4" class="has-text-right" id="valoresTotais">Taxa de Entrega: 10,50 Total: 95,94</th>
           <tbody id="tableProdutos">
           </tbody>
         </table>
@@ -97,7 +99,7 @@
             </a>
           </p>
         </div>
-        </form>
+      </form>
   </div>
   <div class="container is-widescreen disable" id="listaPedido">
     <div class="box">
@@ -337,6 +339,7 @@
     }
     
     function syncSelectAndTable(){
+      let total = 0
       document.querySelector("#tableProdutos").innerHTML = ''
       Object.keys(produtosSelecionados).forEach(idProduto => {
         produtosData.forEach(produto => {
@@ -350,6 +353,8 @@
               <td class="has-text-centered"><i class='bx bxs-trash-alt'></i></td>
             </tr>`;
 
+            total += produto.valor * produtosSelecionados[idProduto]
+
             const template = document.createElement('template');
             template.innerHTML = htmlString.trim(); // Usar .trim() para remover espaços em branco extras
 
@@ -360,6 +365,9 @@
         })
       })
       switchModal()
+      const tax = document.querySelector("#taxEntrega")
+
+      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${total} -- Final: R$${parseInt(tax.value) + total}`
     }
   
   </script>
