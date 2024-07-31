@@ -26,7 +26,7 @@
       </nav>
   </div>
   <div class="container is-widescreen active" id="novoPedido">
-      <form class="box">
+      <form class="box" id="main-form">
         <h1 class="title is-2">Novo Pedido</h1>
         <label class="label">Cliente</label>
         <div class="field has-addons person-field">
@@ -54,7 +54,7 @@
         </div>
         <label class="label">Forma de Pagamento</label>
         <div class="select person-w">
-          <select class="person-w">
+          <select class="person-w" id="paymentMode">
             <option value="0">0 - Pix</option>
             <option value="1">1 - Cartão</option>
             <option value="2">2 - Cardeneta</option>
@@ -72,30 +72,29 @@
               <th class="has-text-centered"><abbr title="Quantidade">Qnt</abbr></th>
               <th class="has-text-centered"><abbr title="Valor">Val</abbr></th>
               <th class="has-text-centered"><abbr title="Subtotal">SubT</abbr></th>
-              <th></th>
             </tr>
           </thead>
           <tfoot>
-            <th colspan="4" class="has-text-right" id="valoresTotais">Taxa de Entrega: 10,50 Total: 95,94</th>
+            <th colspan="4" class="has-text-right" id="valoresTotais">Taxa de Entrega: 0 Total: 0</th>
           <tbody id="tableProdutos">
           </tbody>
         </table>
         <div class="field is-grouped">
           <p class="control">
             <button class="button is-link" onclick="switchModal()">
-              Adicionar
+              Editar Produtos
             </button>
           </p>
         </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <button class="button is-primary">
-              Finalizar
+            <button class="button is-primary" onclick="FecharPedido()">
+              Fechar
             </button>
           </p>
           <p class="control">
-            <a class="button is-light">
-              Cancelar
+            <a class="button is-light" onclick="window.location.reload()">
+              Limpar
             </a>
           </p>
         </div>
@@ -189,10 +188,16 @@
           <input class="input" type="date" id="dtnasc" name="dtnasc">
         </form>
       </section>
+      <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="SalvarCliente()">Salvar</button>
+        </div>
+      </footer>
     </div>
   </div>
   <script>
     let modoNovo = true
+    let total = 0
     let clienteData , produtosData
     let produtosSelecionados = {}
     function switchModal(){
@@ -206,6 +211,9 @@
     })
     document.querySelector("#FilterClientes").addEventListener("change",(e) => {
       carregarClientes()
+    })
+    document.querySelector("#taxEntrega").addEventListener("focusout",(e) => {
+      TotalCalc()
     })
     function changeMode(){
       if(modoNovo){
@@ -337,9 +345,8 @@
         window.location.reload()
       }
     }
-    
     function syncSelectAndTable(){
-      let total = 0
+      
       document.querySelector("#tableProdutos").innerHTML = ''
       Object.keys(produtosSelecionados).forEach(idProduto => {
         produtosData.forEach(produto => {
@@ -350,7 +357,6 @@
               <td class="has-text-right">${produtosSelecionados[idProduto]}</td>
               <td class="has-text-right">${produto.valor}</td>
               <td class="has-text-right">${produto.valor * produtosSelecionados[idProduto]}</td>
-              <td class="has-text-centered"><i class='bx bxs-trash-alt'></i></td>
             </tr>`;
 
             total += produto.valor * produtosSelecionados[idProduto]
@@ -365,11 +371,24 @@
         })
       })
       switchModal()
+      TotalCalc()
+    }
+    function TotalCalc(){
       const tax = document.querySelector("#taxEntrega")
 
       document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${total} -- Final: R$${parseInt(tax.value) + total}`
     }
-  
+    function FecharPedido(){
+      document.querySelector("#main-form")
+
+      const formData = new FormData();
+      formData.append('clientId', document.querySelector("#ListOfClients").value);
+      formData.append('paymentMode', document.querySelector("#paymentMode").value);
+      formData.append('value', value);
+      formData.append('oldImage',old_image)
+      formData.append('file', file);
+
+    }
   </script>
   <script src="main.js"></script>
 </body>
