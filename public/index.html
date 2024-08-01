@@ -99,6 +99,11 @@
               Limpar
             </a>
           </p>
+          <p class="control">
+            <a class="button is-light is-link" onclick="Imprimir()">
+              imprimir
+            </a>
+          </p>
         </div>
       </form>
   </div>
@@ -489,17 +494,8 @@
           // window.location.reload()
         }
     }
-    function imprimir(){
-      // Abrir uma nova janela e escrever o HTML do cupom
-      const janela = window.open('', '', 'width=320,height=600');
-      janela.document.write(cupomHTML);
-      janela.document.close();
-
-      // Esperar que o documento seja carregado antes de imprimir
-      janela.onload = function() {
-          janela.print();
-          janela.close();
-      };
+    async function Imprimir(){
+      window.location.href = '.'
     }
   </script>
   <script src="main.js"></script>
