@@ -1,10 +1,11 @@
 const express = require("express")
 const bodyParser = require('body-parser')
 const { createRecord, readRecords, updateRecord, deleteRecord } = require("./modules/sqliteManager")
+const xlsx = require('xlsx');
 const uuid = require("uuid")
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
 const app = express()
 
 const storage = multer.diskStorage({
@@ -99,6 +100,15 @@ app.post("/delProduto",async (req,res) => {
         }
 })
 
+app.post("/delPedido",async (req,res) => {
+    const {id} = req.body
+    try{
+        await deleteRecord('pedidos',id)
+        res.status(200).send({error : false})
+    }catch{
+        res.status(402).send({error : true})
+    }
+})
 app.post("/newClient",async (req,res) => {
     const data = req.body
     try{
@@ -125,3 +135,72 @@ app.post('/newProduto', upload.single('file'), async (req, res) => {
         res.status(402).send({error : true})
     }
 });
+
+app.post('/newPedido', upload.single('file'), async (req, res) => {
+    const { cliente_id, forma_pag, produtos ,valorTotal,dtPedido} = req.body;
+    const data = {
+        cliente_id: cliente_id,
+        forma_pag: forma_pag,
+        produtos: JSON.stringify(produtos),
+        valorTotal:valorTotal,
+        dtPedido:dtPedido
+    };
+
+    try {
+        await createRecord('pedidos', data);
+        res.status(200).send({ error: false });
+    } catch (error) {
+        console.error('Erro ao criar pedido:', error); // Loga o erro no servidor
+        res.status(500).send({ error: true, message: error.message }); // Envia o erro de volta ao cliente
+    }
+});
+
+app.get("/export",async (req,res) => {
+    const workbook = xlsx.utils.book_new();
+
+    // Adicionar uma planilha para cada tabela
+    const addWorksheet = (data, sheetName) => {
+      const worksheet = xlsx.utils.json_to_sheet(data);
+      xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
+    };
+
+    const getTableData = async (tableName) => {
+        let data = await readRecords(tableName)
+        data.forEach(item => {
+            if(item.dtnasc != undefined){
+                item.dtnasc = formatDateToDDMMYYYY(secondsToDate(item.dtnasc))
+            }
+            if(item.dtPedido != undefined){
+                item.dtPedido = formatDateToDDMMYYYY(secondsToDate(item.dtPedido))
+            }
+        })
+        return data
+    }
+
+    const clientes = await getTableData('clientes');
+    const pedidos = await getTableData('pedidos');
+
+
+    addWorksheet(clientes, 'clientes');
+    addWorksheet(pedidos, 'pedidos');
+
+    // Gerar o buffer do arquivo Excel
+    const buffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+
+    // Definir os headers para download
+    res.setHeader('Content-Disposition', 'attachment; filename=dados_tratados.xlsx');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+    // Enviar o buffer como resposta
+    res.send(buffer);
+})
+
+function secondsToDate(seconds) {
+    const date = new Date(seconds * 1000);
+    return date.toISOString().split('T')[0];
+}
+
+function formatDateToDDMMYYYY(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+}

@@ -31,3 +31,25 @@ function formatDateToDDMMYYYY(dateString) {
 function ordenarPorNome(arr) {
   return arr.sort((a, b) => a.nome.localeCompare(b.nome));
 }
+
+function gerExcel(){
+  fetch('/export', { 
+    method: 'GET'
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Falha na requisição.');
+      }
+      return response.blob(); // Recebe o buffer como um blob
+  })
+  .then(blob => {
+      const url = window.URL.createObjectURL(blob); // Cria um URL para o blob
+      const a = document.createElement('a'); // Cria um elemento <a> para download
+      a.href = url;
+      a.download = 'dados_tratados.xlsx'; // Nome do arquivo para download
+      document.body.appendChild(a); // Adiciona o elemento ao DOM
+      a.click(); // Simula o clique para iniciar o download
+      a.remove(); // Remove o elemento do DOM
+      window.URL.revokeObjectURL(url); // Libera o URL do blob
+  })
+};
