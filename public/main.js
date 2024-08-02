@@ -31,7 +31,18 @@ function formatDateToDDMMYYYY(dateString) {
 function ordenarPorNome(arr) {
   return arr.sort((a, b) => a.nome.localeCompare(b.nome));
 }
+function formatarData() {
+  const dataAtual = new Date();
 
+  const dia = String(dataAtual.getDate()).padStart(2, '0');
+  const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Meses são de 0 a 11
+  const ano = dataAtual.getFullYear();
+
+  const horas = String(dataAtual.getHours()).padStart(2, '0');
+  const minutos = String(dataAtual.getMinutes()).padStart(2, '0');
+
+  return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+}
 function gerExcel(){
   fetch('/export', { 
     method: 'GET'

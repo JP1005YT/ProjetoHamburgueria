@@ -63,7 +63,7 @@
           </select>
         </div>
         <label class="label">Observações</label>
-        <input class="input" type="text" placeholder="Obs" />
+        <input class="input" type="text" placeholder="Obs" id="obs"/>
         <label class="label">Taxa de Entrega</label>
         <input class="input" id="taxEntrega" type="number" value="00.00"/>
         <label class="label">Produtos</label>
@@ -495,17 +495,90 @@
         }
     }
     async function Imprimir(){
-      window.location.href = '.'
+      const clientSelecionado = document.querySelector("#ListOfClients").value
+      const paymentMode = document.querySelector("#paymentMode").value
+      const observacao = document.querySelector("#obs").value
+
+      const idnum = Object.keys(produtosSelecionados)
+      let produtosSelecionadosCupom = [];
+      idnum.forEach(id => {
+        let obj = {};
+        produtosData.forEach(produto => {
+          if(produto.id == id){
+            obj['desc'] = produto.descricao;
+          }
+        });
+        obj['num'] = produtosSelecionados[id]; // Supondo que você queria acessar um valor existente na array `produtosSelecionadosCupom`
+        produtosSelecionadosCupom.push(obj);
+      });
+      
+      let clienteDataCupom
+      clienteData.forEach(cli => {
+        if(cli.id == clientSelecionado){
+          clienteDataCupom = cli
+        }
+        console.log(cli.id,clientSelecionado,cli.id == clientSelecionado)
+      })
+      
+      const dadosCupom = {
+        cliente: clienteDataCupom.nome,
+        endereco: clienteDataCupom.endereco,
+        telefone: clienteDataCupom.telefone,
+        pag_method: paymentMode,
+        obs: observacao,
+        valTotal: `R$${total.toFixed(2).replace('.', ',')}`,
+        produtoscupom:produtosSelecionadosCupom,
+        datetime : formatarData()
+      };
+
+      const templateScript = document.getElementById('cupom-template').innerHTML;
+      const template = Handlebars.compile(templateScript);
+      const htmlContent = template(dadosCupom);
+
+      const janela = window.open('', '');
+
+      if (janela) {
+        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } }</style></head><body>');
+        janela.document.write(htmlContent);
+        janela.document.write('</body></html>');
+        janela.document.close();
+
+        // Usar setTimeout para garantir que o conteúdo esteja pronto antes de imprimir
+        setTimeout(() => {
+            janela.print();
+            janela.close();
+        }, 500);
+      } else {
+          console.error('Não foi possível abrir a nova janela.');
+      }
     }
   </script>
   <script src="main.js"></script>
   <script id="cupom-template" type="text/x-handlebars-template">
     <div class="cupom">
-        <h2>{{loja}}</h2>
-        <p>Data: {{data}}</p>
-        <p>Item: {{item}}</p>
-        <p>Quantidade: {{quantidade}}</p>
-        <p>Valor: {{valor}}</p>
+      <h2>{{cliente}}</h2><hr>
+      <h3>Endereço : {{endereco}}</h3>
+      <h3>Telefone : {{telefone}}</h3>
+      <h3>Metodo de Pagamento : {{pag_method}}</h3>
+      <h3>Observação : {{obs}}</h3>
+      <h2>Total : R${{valTotal}}</h2><hr>
+        <table width="100%">
+            <tr>
+                <th width="10%">Qtd</th>
+                <th>Desc</th>
+            </tr>
+            {{#each produtoscupom}}
+              <tr>
+                <td>{{this.num}}</td>
+                <td>{{this.desc}}</td>
+              </tr>
+            {{/each}}
+        </table><hr>
+        <h4>>>Segue no Insta QRCode<<<</h3>
+        <h4>qrcode ilustrativo</h4>
+        <h4>>>Obrigado pela Preferencia<<<</h3>
+        <h4>>>Chave PIX 18996775302<<<</h3>
+        <h5>{{datetime}}</h5>
     </div>
   </script>
 </body>
