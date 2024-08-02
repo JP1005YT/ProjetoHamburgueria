@@ -173,6 +173,14 @@ app.get("/export",async (req,res) => {
             if(item.dtPedido != undefined){
                 item.dtPedido = formatDateToDDMMYYYY(secondsToDate(item.dtPedido))
             }
+            if(item.cliente_id != undefined){
+                clientes.forEach(cliente => {
+                    if(cliente.id == item.cliente_id){
+                        item.cliente_id = cliente.nome
+                    }
+                })
+            }
+            // if(item.prod)
         })
         return data
     }
@@ -180,6 +188,7 @@ app.get("/export",async (req,res) => {
     const clientes = await getTableData('clientes');
     const pedidos = await getTableData('pedidos');
 
+    // console.log(pedidos)
 
     addWorksheet(clientes, 'clientes');
     addWorksheet(pedidos, 'pedidos');
