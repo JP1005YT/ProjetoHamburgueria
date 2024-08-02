@@ -165,26 +165,52 @@ app.get("/export",async (req,res) => {
     };
 
     const getTableData = async (tableName) => {
-        let data = await readRecords(tableName)
+        let data = await readRecords(tableName);
+        let finalData = [];
+    
         data.forEach(item => {
-            if(item.dtnasc != undefined){
-                item.dtnasc = formatDateToDDMMYYYY(secondsToDate(item.dtnasc))
+            if (item.dtnasc !== undefined) {
+                item.dtnasc = formatDateToDDMMYYYY(secondsToDate(item.dtnasc));
             }
-            if(item.dtPedido != undefined){
-                item.dtPedido = formatDateToDDMMYYYY(secondsToDate(item.dtPedido))
+            if (item.dtPedido !== undefined) {
+                item.dtPedido = formatDateToDDMMYYYY(secondsToDate(item.dtPedido));
             }
-            if(item.cliente_id != undefined){
+            if (item.cliente_id !== undefined) {
                 clientes.forEach(cliente => {
-                    if(cliente.id == item.cliente_id){
-                        item.cliente_id = cliente.nome
+                    if (cliente.id == item.cliente_id) {
+                        // Cria um novo objeto com as propriedades na ordem desejada
+                        item = {
+                            id: item.id,
+                            nome_cliente: cliente.nome, // Renomeando 'cliente_id' para 'nome_cliente'
+                            forma_pag: item.forma_pag,
+                            produtos: item.produtos,
+                            valorTotal: item.valorTotal,
+                            dtPedido: item.dtPedido
+                        };
                     }
-                })
+                });
             }
-            // if(item.prod)
-        })
-        return data
+            if (item.produtos) {
+                let jsonData = JSON.parse(JSON.parse(item.produtos));
+                let idProdutos = Object.keys(jsonData);
+    
+                idProdutos.forEach(produtoId => {
+                    produtos.forEach(prodbd => {
+                        if (prodbd.id == produtoId) {
+                            let newItem = { ...item }; // Clone the item
+                            newItem.produtos = `${jsonData[produtoId]} - ${prodbd.descricao}`;
+                            finalData.push(newItem); // Add the new item to finalData
+                        }
+                    });
+                });
+            } else {
+                finalData.push(item); // If no products, add the item as is
+            }
+        });
+        return finalData;
     }
 
+    const produtos = await getTableData('produtos')
     const clientes = await getTableData('clientes');
     const pedidos = await getTableData('pedidos');
 
@@ -197,7 +223,7 @@ app.get("/export",async (req,res) => {
     const buffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
 
     // Definir os headers para download
-    res.setHeader('Content-Disposition', 'attachment; filename=dados_tratados.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename=dadosExportados.xlsx');
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
     // Enviar o buffer como resposta
