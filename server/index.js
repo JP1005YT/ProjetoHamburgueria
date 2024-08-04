@@ -199,6 +199,7 @@ app.get("/export",async (req,res) => {
                         if (prodbd.id == produtoId) {
                             let newItem = { ...item }; // Clone the item
                             newItem.produtos = `${jsonData[produtoId]} - ${prodbd.descricao}`;
+                            newItem.valorTotal = `${prodbd.valor * jsonData[produtoId]}`
                             finalData.push(newItem); // Add the new item to finalData
                         }
                     });
@@ -207,6 +208,7 @@ app.get("/export",async (req,res) => {
                 finalData.push(item); // If no products, add the item as is
             }
         });
+        console.log(finalData)
         return finalData;
     }
 
