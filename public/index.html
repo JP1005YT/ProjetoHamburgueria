@@ -537,7 +537,7 @@
       const janela = window.open('', '');
 
       if (janela) {
-        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } }</style></head><body>');
+        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } .img {width:100%;display:flex;align-itens:center;justify-content:center;}}</style></head><body>');
         janela.document.write(htmlContent);
         janela.document.write('</body></html>');
         janela.document.close();
@@ -574,7 +574,9 @@
             {{/each}}
         </table><hr>
         <h4>>>Segue no Insta QRCode<<<</h3>
-        <h4>qrcode ilustrativo</h4>
+        <div class="img">
+          <img src="./qrcode.png" width="30%"></img>
+        </div>
         <h4>>>Obrigado pela Preferencia<<<</h3>
         <h4>>>Chave PIX 18996775302<<<</h3>
         <h5>{{datetime}}</h5>
