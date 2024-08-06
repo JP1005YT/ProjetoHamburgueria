@@ -29,7 +29,7 @@
   </div>
   <div class="container is-widescreen active" id="novoPedido">
       <form class="box" id="main-form">
-        <h1 class="title is-2">Novo Pedido</h1>
+        <h1 class="title is-2">Novo Pedido -  Nº<span id="numPedido">0</span></h1>
         <label class="label">Cliente</label>
         <div class="field has-addons person-field">
           <div class="control three">
@@ -101,7 +101,7 @@
           </p>
           <p class="control">
             <a class="button is-light is-link" onclick="Imprimir()">
-              imprimir
+              Fechar e Imprimir
             </a>
           </p>
         </div>
@@ -179,6 +179,7 @@
     </div>
   </div>
   <script>
+    let lastId = 0
     let modoNovo = true
     let total = 0
     let clienteData , produtosData , pedidosData
@@ -310,6 +311,10 @@
       document.querySelector("#allPediddos").innerHTML = ""
       pedidosData.forEach((pedido,index) => {
         let nome
+        if(pedido.id > lastId){
+          lastId = pedido.id
+        }
+        console.log(lastId)
         clienteData.forEach(cliente => {
           if(cliente.id == pedido.cliente_id){
             nome = cliente.nome
@@ -351,6 +356,7 @@
           })
           document.querySelector("#allPediddos").appendChild(nodeObject)
       })
+      document.querySelector("#numPedido").innerHTML = lastId + 1
       document.querySelector("#quantPedidos").innerHTML = pedidosData.length
     }
     loadData()
@@ -413,71 +419,71 @@
       document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${total} -- Final: R$${parseInt(tax.value) + total}`
     }
     function FecharPedido() {
-  // Selecionar elementos e validar sua existência
-  const mainForm = document.querySelector("#main-form");
-  const clienteElement = document.querySelector("#ListOfClients");
-  const paymentModeElement = document.querySelector("#paymentMode");
+      // Selecionar elementos e validar sua existência
+      const mainForm = document.querySelector("#main-form");
+      const clienteElement = document.querySelector("#ListOfClients");
+      const paymentModeElement = document.querySelector("#paymentMode");
 
-  if (!mainForm) {
-    alert("Formulário principal não encontrado.");
-    return;
-  }
-
-  if (!clienteElement) {
-    alert("Elemento de cliente não encontrado.");
-    return;
-  }
-
-  if (!paymentModeElement) {
-    alert("Elemento de forma de pagamento não encontrado.");
-    return;
-  }
-
-  if (!produtosSelecionados || typeof produtosSelecionados !== 'object' || Object.keys(produtosSelecionados).length === 0) {
-    alert("Nenhum produto selecionado.");
-    return;
-  }
-
-  if (!total || isNaN(total)) {
-    alert("O valor total não é válido.");
-    return;
-  }
-
-  const date = new Date()
-  const isoString = date.toISOString().split('T')[0]
-  
-  // Criar o objeto FormData e preencher com os dados validados
-  const formData = new FormData();
-  formData.append('cliente_id', clienteElement.value);
-  formData.append('forma_pag', paymentModeElement.value);
-  formData.append('dtPedido', dateToSeconds(isoString))
-  formData.append('produtos', JSON.stringify(produtosSelecionados)); // Convertendo produtosSelecionados para JSON
-  formData.append('valorTotal', total);
-
-  // Enviar o formulário para o servidor
-  sendFormToServer(formData);
-
-  function sendFormToServer(formData) {
-    fetch('./../newPedido', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => {
-      if (!response.ok) {
-        return response.json().then(err => { throw new Error(err.message || 'Erro desconhecido') });
+      if (!mainForm) {
+        alert("Formulário principal não encontrado.");
+        return;
       }
-      return response.json();
-    })
-    .then(data => {
-      alert('Pedido fechado com sucesso!');
-      window.location.reload();
-    })
-    .catch(error => {
-      console.error('Erro ao enviar pedido:', error);
-      alert('Erro ao fechar o pedido: ' + error.message);
-    });
-  }
-}
+
+      if (!clienteElement) {
+        alert("Elemento de cliente não encontrado.");
+        return;
+      }
+
+      if (!paymentModeElement) {
+        alert("Elemento de forma de pagamento não encontrado.");
+        return;
+      }
+
+      if (!produtosSelecionados || typeof produtosSelecionados !== 'object' || Object.keys(produtosSelecionados).length === 0) {
+        alert("Nenhum produto selecionado.");
+        return;
+      }
+
+      if (!total || isNaN(total)) {
+        alert("O valor total não é válido.");
+        return;
+      }
+
+      const date = new Date()
+      const isoString = date.toISOString().split('T')[0]
+      
+      // Criar o objeto FormData e preencher com os dados validados
+      const formData = new FormData();
+      formData.append('cliente_id', clienteElement.value);
+      formData.append('forma_pag', paymentModeElement.value);
+      formData.append('dtPedido', dateToSeconds(isoString))
+      formData.append('produtos', JSON.stringify(produtosSelecionados)); // Convertendo produtosSelecionados para JSON
+      formData.append('valorTotal', total);
+
+      // Enviar o formulário para o servidor
+      sendFormToServer(formData);
+
+      function sendFormToServer(formData) {
+        fetch('./../newPedido', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(err => { throw new Error(err.message || 'Erro desconhecido') });
+          }
+          return response.json();
+        })
+        .then(data => {
+          alert('Pedido fechado com sucesso!');
+          window.location.reload();
+        })
+        .catch(error => {
+          console.error('Erro ao enviar pedido:', error);
+          alert('Erro ao fechar o pedido: ' + error.message);
+        });
+      }
+    }
     function confirmarDel(cod){
       const data = {id : cod}
       const result = fetch('./../delPedido', {
@@ -520,6 +526,7 @@
       })
       
       const dadosCupom = {
+        numPedido : lastId + 1,
         cliente: clienteDataCupom.nome,
         endereco: clienteDataCupom.endereco,
         telefone: clienteDataCupom.telefone,
@@ -546,6 +553,7 @@
         setTimeout(() => {
             janela.print();
             janela.close();
+            FecharPedido();
         }, 500);
       } else {
           console.error('Não foi possível abrir a nova janela.');
@@ -555,7 +563,9 @@
   <script src="main.js"></script>
   <script id="cupom-template" type="text/x-handlebars-template">
     <div class="cupom">
+      <h5>{{datetime}}</h5>
       <h2>{{cliente}}</h2><hr>
+      <h3>Numero de Pedido : {{numPedido}}</h3>
       <h3>Endereço : {{endereco}}</h3>
       <h3>Telefone : {{telefone}}</h3>
       <h3>Metodo de Pagamento : {{pag_method}}</h3>
@@ -579,7 +589,6 @@
         </div>
         <h4>>>Obrigado pela Preferencia<<<</h3>
         <h4>>>Chave PIX 18996775302<<<</h3>
-        <h5>{{datetime}}</h5>
     </div>
   </script>
 </body>
