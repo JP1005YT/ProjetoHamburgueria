@@ -1,5 +1,4 @@
 function changeTheme(theme){
-    console.log(theme)
     if(theme === undefined){
       let themaAtual = document.querySelector("html").classList.value
       if(themaAtual == "theme-light"){

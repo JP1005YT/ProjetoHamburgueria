@@ -59,7 +59,8 @@
           <select class="person-w" id="paymentMode">
             <option value="Pix">Pix</option>
             <option value="Cartão">Cartão</option>
-            <option value="Cardeneta">Cardeneta</option>
+            <option value="Caderneta">Caderneta</option>
+            <option value="Dinheiro">Dinheiro</option>
           </select>
         </div>
         <label class="label">Observações</label>
@@ -180,8 +181,9 @@
   </div>
   <script>
     let lastId = 0
-    let modoNovo = true
     let total = 0
+    let modoNovo = true
+    let totalProdSelec = 0
     let clienteData , produtosData , pedidosData
     let produtosSelecionados = {}
     function switchModal(){
@@ -314,7 +316,6 @@
         if(pedido.id > lastId){
           lastId = pedido.id
         }
-        console.log(lastId)
         clienteData.forEach(cliente => {
           if(cliente.id == pedido.cliente_id){
             nome = cliente.nome
@@ -386,7 +387,7 @@
       }
     }
     function syncSelectAndTable(){
-      
+      totalProdSelec = 0
       document.querySelector("#tableProdutos").innerHTML = ''
       Object.keys(produtosSelecionados).forEach(idProduto => {
         produtosData.forEach(produto => {
@@ -399,7 +400,7 @@
               <td class="has-text-right">${produto.valor * produtosSelecionados[idProduto]}</td>
             </tr>`;
 
-            total += produto.valor * produtosSelecionados[idProduto]
+            totalProdSelec += produto.valor * produtosSelecionados[idProduto]
 
             const template = document.createElement('template');
             template.innerHTML = htmlString.trim(); // Usar .trim() para remover espaços em branco extras
@@ -415,8 +416,8 @@
     }
     function TotalCalc(){
       const tax = document.querySelector("#taxEntrega")
-
-      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${total} -- Final: R$${parseInt(tax.value) + total}`
+      total = parseInt(tax.value) + totalProdSelec
+      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${totalProdSelec} -- Final: R$${total}`
     }
     function FecharPedido() {
       // Selecionar elementos e validar sua existência
