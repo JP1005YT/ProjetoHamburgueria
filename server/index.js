@@ -252,12 +252,3 @@ function multerErrorHandler(req, res, next) {
         next();
     });
 }
-
-async function convertHeicToJpg(filePath) {
-    const newFilePath = filePath.replace('.heic', '.jpg');
-    await sharp(filePath)
-        .jpeg()
-        .toFile(newFilePath);
-    fs.unlinkSync(filePath); // Remove o arquivo .heic original
-    return newFilePath;
-}
