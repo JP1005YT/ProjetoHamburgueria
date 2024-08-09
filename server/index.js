@@ -119,7 +119,7 @@ app.post("/newClient",async (req,res) => {
     }
 })
 
-app.post('/newProduto', upload.single('file'), async (req, res) => {
+app.post('/newProduto', multerErrorHandler, async (req, res) => {
     const { description, value } = req.body;
     const file = req.file;
   
@@ -240,4 +240,24 @@ function secondsToDate(seconds) {
 function formatDateToDDMMYYYY(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
+}
+
+function multerErrorHandler(req, res, next) {
+    upload.single('file')(req, res, (err) => {
+        if (err) {
+            // Captura o erro do multer
+            console.error(err);
+            return res.status(500).send({ error: true, message: err.message });
+        }
+        next();
+    });
+}
+
+async function convertHeicToJpg(filePath) {
+    const newFilePath = filePath.replace('.heic', '.jpg');
+    await sharp(filePath)
+        .jpeg()
+        .toFile(newFilePath);
+    fs.unlinkSync(filePath); // Remove o arquivo .heic original
+    return newFilePath;
 }
