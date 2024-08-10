@@ -147,6 +147,23 @@
       <section class="modal-card-body person-modal-body" id="prodBox">
       </section>
       <footer class="modal-card-foot person-modal-footer">
+        <div class="buttons">
+          <p class="control">
+            <button class="button is-light is-link" onclick="carregarProdutos('preco-maior')">
+              Maior Preço
+            </button>
+          </p>
+          <p class="control">
+            <a class="button is-light is-link" onclick="carregarProdutos('preco-menor')">
+              Menor Preço
+            </a>
+          </p>
+          <p class="control">
+            <a class="button is-light is-link" onclick="carregarProdutos('nome')">
+              Ordem alfabetica
+            </a>
+          </p>
+        </div>
         <div class="buttons is-right">
           <button class="button is-success" onclick="syncSelectAndTable()">Salvar</button>
         </div>
@@ -253,8 +270,38 @@
         listclientsDOM.appendChild(novaOpc)
       });
     }
-    function carregarProdutos(){
-      produtosData.forEach((produto,index) => {
+
+    function filtrarEOrganizarProdutos(filtro) {
+    // Faz uma cópia da lista para evitar mutação do original
+    let produtosFiltrados = [...produtosData];
+
+    // Aplica o filtro de acordo com a escolha do usuário
+    switch(filtro) {
+        case 'preco-maior':
+            // Ordena por preço do maior para o menor
+            produtosFiltrados.sort((a, b) => b.valor - a.valor);
+            break;
+        case 'preco-menor':
+            // Ordena por preço do menor para o maior
+            produtosFiltrados.sort((a, b) => a.valor - b.valor);
+            break;
+        case 'nome':
+            // Ordena por nome em ordem alfabética
+            produtosFiltrados.sort((a, b) => a.descricao.localeCompare(b.descricao));
+            break;
+        default:
+            // Se nenhum filtro válido for passado, retorna a lista sem alterações
+            break;
+    }
+
+    return produtosFiltrados;
+    }   
+
+    function carregarProdutos(filtro){
+      document.querySelector("#prodBox").innerHTML = ''
+      produtosSelecionados = {}
+      let produtosFiltrados = filtrarEOrganizarProdutos(filtro)
+      produtosFiltrados.forEach((produto,index) => {
         const parser = new DOMParser();
         const htmlString = `
           <li class="card person-card-prod" prod-id="${produto.id}">
