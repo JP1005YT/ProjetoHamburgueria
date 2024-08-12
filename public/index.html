@@ -65,8 +65,16 @@
         </div>
         <label class="label">Observações</label>
         <input class="input" type="text" placeholder="Obs" id="obs"/>
-        <label class="label">Taxa de Entrega</label>
-        <input class="input" id="taxEntrega" type="number" value="00.00"/>
+        <div class="columns person-ptop">
+          <div class="column">
+            <label class="label">Taxa de Entrega</label>
+            <input class="input" id="taxEntrega" type="number" value="00.00"/>
+          </div>
+          <div class="column">
+            <label class="label">Desconto</label>
+            <input class="input" id="taxDesconto" type="number" value="00.00"/>
+          </div>
+        </div>
         <label class="label">Produtos</label>
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
           <thead>
@@ -120,11 +128,11 @@
             <th class="has-text-centered"><abbr title="Items do Pedido">I. Ped</abbr></th>
             <th class="has-text-centered"><abbr title="Data Pedido">Data Pedido</abbr></th>
             <th class="has-text-centered"><abbr title="Valor Total">Val</abbr></th>
-            <th></th>
+            <th colspan="2"></th>
           </tr>
         </thead>
         <tfoot>
-          <th colspan="7" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
+          <th colspan="8" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
         <tbody id="allPediddos"></tbody>
       </table>
     </div>
@@ -218,6 +226,9 @@
     document.querySelector("#taxEntrega").addEventListener("focusout",(e) => {
       TotalCalc()
     })
+    document.querySelector("#taxDesconto").addEventListener("focusout",(e) => {
+      TotalCalc()
+    })
     function changeMode(){
       if(modoNovo){
         document.querySelector("#novoPedido").classList.remove("active")
@@ -270,7 +281,6 @@
         listclientsDOM.appendChild(novaOpc)
       });
     }
-
     function filtrarEOrganizarProdutos(filtro) {
     // Faz uma cópia da lista para evitar mutação do original
     let produtosFiltrados = [...produtosData];
@@ -296,7 +306,6 @@
 
     return produtosFiltrados;
     }   
-
     function carregarProdutos(filtro){
       document.querySelector("#prodBox").innerHTML = ''
       produtosSelecionados = {}
@@ -378,6 +387,7 @@
               <td class="has-text-right is-vcentered"> ${formatDateToDDMMYYYY(secondsToDate(pedido.dtPedido))}</td>
               <td class="has-text-right is-vcentered"> R$${pedido.valorTotal}</td>
               <td class="has-text-centered is-vcentered" id="delbut" num-ped="${pedido.id}"><i class='bx bxs-trash-alt' style='font-size:24px'></i></td>
+              <td class="has-text-centered is-vcentered" id="printbut" num-ped="${pedido.id}"><i class='bx bxs-printer' style='font-size:24px'></i></td>
           </tr>`
           const template = document.createElement('template');
           template.innerHTML = htmlString.trim(); // Usar .trim() para remover espaços em branco extras
@@ -391,6 +401,9 @@
             if(confirm("Deseja excluir o pedido codigo " + nodeObject.querySelector("#delbut").getAttribute("num-ped") + "?")){
               confirmarDel(nodeObject.querySelector("#delbut").getAttribute("num-ped"))
             }
+          })
+          nodeObject.querySelector("#printbut").addEventListener("click", () => {
+            ImprimirPedido(nodeObject.querySelector("#printbut").getAttribute("num-ped"))
           })
           produtos.forEach(produto => {
             produtosData.forEach(produtobanco => {
@@ -463,8 +476,10 @@
     }
     function TotalCalc(){
       const tax = document.querySelector("#taxEntrega")
+      const desc = document.querySelector("#taxDesconto").value
       total = parseInt(tax.value) + totalProdSelec
-      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${totalProdSelec} -- Final: R$${total}`
+      total = total - parseInt(desc)
+      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${totalProdSelec} -- Desconto:R$${desc} -- Final: R$${total}`
     }
     function FecharPedido() {
       // Selecionar elementos e validar sua existência
@@ -606,6 +621,9 @@
       } else {
           console.error('Não foi possível abrir a nova janela.');
       }
+    }
+    async function ImprimirPedido(id){
+      alert(id)
     }
   </script>
   <script src="main.js"></script>

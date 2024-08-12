@@ -132,6 +132,12 @@
     justify-content: center;
     align-items: center;
 }
+.person-ptop{
+    padding: 4px 0 0 0;
+}
+#printbut:hover{
+    cursor: pointer;
+}
 
 @media (max-width: 1023px){
     .person-btn-theme{
