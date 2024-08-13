@@ -208,15 +208,12 @@ app.get("/export",async (req,res) => {
                 finalData.push(item); // If no products, add the item as is
             }
         });
-        console.log(finalData)
         return finalData;
     }
 
     const produtos = await getTableData('produtos')
     const clientes = await getTableData('clientes');
     const pedidos = await getTableData('pedidos');
-
-    // console.log(pedidos)
 
     addWorksheet(clientes, 'clientes');
     addWorksheet(pedidos, 'pedidos');

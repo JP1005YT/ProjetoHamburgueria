@@ -160,6 +160,11 @@
   cursor: pointer;
 }
 
+.person-totprod div {
+  margin: 0 12px 0 12px;
+  float: right;
+}
+
 @media (max-width: 1023px) {
   .person-btn-theme {
     display: none;

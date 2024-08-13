@@ -43,23 +43,39 @@ function formatarData() {
   return `${dia}/${mes}/${ano} ${horas}:${minutos}`;
 }
 function gerExcel(){
-  fetch('/export', { 
-    method: 'GET'
-  })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Falha na requisição.');
-      }
-      return response.blob(); // Recebe o buffer como um blob
-  })
-  .then(blob => {
-      const url = window.URL.createObjectURL(blob); // Cria um URL para o blob
-      const a = document.createElement('a'); // Cria um elemento <a> para download
-      a.href = url;
-      a.download = 'dados_tratados.xlsx'; // Nome do arquivo para download
-      document.body.appendChild(a); // Adiciona o elemento ao DOM
-      a.click(); // Simula o clique para iniciar o download
-      a.remove(); // Remove o elemento do DOM
-      window.URL.revokeObjectURL(url); // Libera o URL do blob
-  })
+  if(confirm("Deseja Gerar um Arquivo Excel?")){
+    fetch('/export', { 
+      method: 'GET'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Falha na requisição.');
+        }
+        return response.blob(); // Recebe o buffer como um blob
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob); // Cria um URL para o blob
+        const a = document.createElement('a'); // Cria um elemento <a> para download
+        a.href = url;
+        a.download = 'dados_tratados.xlsx'; // Nome do arquivo para download
+        document.body.appendChild(a); // Adiciona o elemento ao DOM
+        a.click(); // Simula o clique para iniciar o download
+        a.remove(); // Remove o elemento do DOM
+        window.URL.revokeObjectURL(url); // Libera o URL do blob
+    })
+  }
 };
+
+function formatarParaMoeda(valor) {
+  // Converte para número de ponto flutuante, se o valor for uma string
+  if (typeof(valor) !== 'number') {
+      valor = parseFloat(valor);
+  }
+
+  // Verifica se o valor é um número válido
+  if (isNaN(valor)) {
+      return 'NaN(dev)';
+  }
+
+  return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+}

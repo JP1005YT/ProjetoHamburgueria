@@ -86,7 +86,7 @@
             </tr>
           </thead>
           <tfoot>
-            <th colspan="4" class="has-text-right" id="valoresTotais">Taxa de Entrega: 0 Total: 0</th>
+            <th colspan="4" class="has-text-right person-totprod" id="valoresTotais"></th>
           <tbody id="tableProdutos">
           </tbody>
         </table>
@@ -456,8 +456,8 @@
             <tr>
               <td>${produto.descricao}</td>
               <td class="has-text-right">${produtosSelecionados[idProduto]}</td>
-              <td class="has-text-right">${produto.valor}</td>
-              <td class="has-text-right">${produto.valor * produtosSelecionados[idProduto]}</td>
+              <td class="has-text-right">${formatarParaMoeda(produto.valor)}</td>
+              <td class="has-text-right">${formatarParaMoeda(produto.valor * produtosSelecionados[idProduto])}</td>
             </tr>`;
 
             totalProdSelec += produto.valor * produtosSelecionados[idProduto]
@@ -477,9 +477,13 @@
     function TotalCalc(){
       const tax = document.querySelector("#taxEntrega")
       const desc = document.querySelector("#taxDesconto").value
-      total = parseInt(tax.value) + totalProdSelec
-      total = total - parseInt(desc)
-      document.querySelector("#valoresTotais").innerHTML = `Taxa de Entrega:R$${tax.value} -- Valor produtos:R$${totalProdSelec} -- Desconto:R$${desc} -- Final: R$${total}`
+      total = parseFloat(tax.value) + totalProdSelec
+      total = total - parseFloat(desc)
+      document.querySelector("#valoresTotais").innerHTML = `
+      <div>Final: ${formatarParaMoeda(total)}</div>
+      <div>Desconto:${formatarParaMoeda(desc)}</div>
+      <div>Taxa de Entrega:${formatarParaMoeda(tax.value)}</div>
+      <div>Valor produtos:${formatarParaMoeda(totalProdSelec)}</div>`
     }
     function FecharPedido() {
       // Selecionar elementos e validar sua existência

@@ -176,13 +176,20 @@
     .catch(error => alert(error));
     }
     function sendFormToServer(formData) {
-    fetch('./../newProduto', {
-      method: 'POST',
-      body: formData
-    })
+      let err = true
+      fetch('./../newProduto', {
+        method: 'POST',
+        body: formData
+      })
     .then(response => response.json())
-    .then(data => window.location.reload())
+    .then(data => proc(data))
     .catch(error => alert(error));
+      function proc(data){
+        if(data){
+          alert("Produto Cadastrado!")
+          window.location.reload()
+        }
+      }
   }
 
     async function carregarProdutos(){
