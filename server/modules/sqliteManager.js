@@ -44,4 +44,10 @@ async function deleteRecord(table, id) {
   await db.close();
 }
 
+async function adquireLastId(table){
+  const db = await openDatabase()
+  await db.run(`SELECT seq FROM sqlite_sequence WHERE name = ${table}`)
+  await db.close();
+}
+
 module.exports = { createRecord, readRecords, updateRecord, deleteRecord };

@@ -74,7 +74,7 @@ function formatarParaMoeda(valor) {
 
   // Verifica se o valor é um número válido
   if (isNaN(valor)) {
-      return 'NaN(dev)';
+      return 'Null';
   }
 
   return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

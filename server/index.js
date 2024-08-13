@@ -137,13 +137,14 @@ app.post('/newProduto', multerErrorHandler, async (req, res) => {
 });
 
 app.post('/newPedido', upload.single('file'), async (req, res) => {
-    const { cliente_id, forma_pag, produtos ,valorTotal,dtPedido} = req.body;
+    const { cliente_id, forma_pag, produtos ,valorTotal,dtPedido , taxEntrega} = req.body;
     const data = {
         cliente_id: cliente_id,
         forma_pag: forma_pag,
         produtos: JSON.stringify(produtos),
         valorTotal:valorTotal,
-        dtPedido:dtPedido
+        dtPedido:dtPedido,
+        taxEntrega : taxEntrega
     };
 
     try {
