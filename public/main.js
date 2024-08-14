@@ -65,7 +65,6 @@ function gerExcel(){
     })
   }
 };
-
 function formatarParaMoeda(valor) {
   // Converte para número de ponto flutuante, se o valor for uma string
   if (typeof(valor) !== 'number') {

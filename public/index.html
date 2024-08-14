@@ -206,7 +206,6 @@
     </div>
   </div>
   <script>
-    let lastId = 0
     let total = 0
     let modoNovo = true
     let totalProdSelec = 0
@@ -366,14 +365,11 @@
         document.querySelector("#prodBox").appendChild(nodeObject)
       });
     }
-    function carregarPedidos(){
+    async function carregarPedidos(){
       document.querySelector("#allPediddos").innerHTML = ""
-      pedidosData.forEach((pedido,index) => {
+      pedidosData.forEach(async (pedido,index) => {
         let nome
-        if(pedido.id > lastId){
-          lastId = pedido.id
-        }
-        clienteData.forEach(cliente => {
+        clienteData.forEach(async cliente => {
           if(cliente.id == pedido.cliente_id){
             nome = cliente.nome
           }
@@ -419,7 +415,10 @@
           })
           document.querySelector("#allPediddos").appendChild(nodeObject)
       })
-      document.querySelector("#numPedido").innerHTML = lastId + 1
+      
+      const lastId = await fetch("./lastcode").then( resp => resp.json())
+
+      document.querySelector("#numPedido").innerHTML = lastId[0].seq + 1
       document.querySelector("#quantPedidos").innerHTML = pedidosData.length
     }
     loadData()

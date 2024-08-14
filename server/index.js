@@ -1,6 +1,6 @@
 const express = require("express")
 const bodyParser = require('body-parser')
-const { createRecord, readRecords, updateRecord, deleteRecord } = require("./modules/sqliteManager")
+const { createRecord, readRecords, updateRecord, deleteRecord, adquireLastId } = require("./modules/sqliteManager")
 const xlsx = require('xlsx');
 const uuid = require("uuid")
 const multer = require('multer');
@@ -228,6 +228,11 @@ app.get("/export",async (req,res) => {
 
     // Enviar o buffer como resposta
     res.send(buffer);
+})
+
+app.get("/lastcode",async(req,res) => {
+    const resp = await adquireLastId("pedidos")
+    res.send(resp)
 })
 
 function secondsToDate(seconds) {
