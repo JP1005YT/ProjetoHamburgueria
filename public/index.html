@@ -127,8 +127,10 @@
             <th class="has-text-centered"><abbr title="Metodo de Pagamento">M. Pag</abbr></th>
             <th class="has-text-centered"><abbr title="Items do Pedido">I. Ped</abbr></th>
             <th class="has-text-centered"><abbr title="Data Pedido">Data Pedido</abbr></th>
+            <th class="has-text-centered"><abbr title="Total Pedidos">T. Ped</abbr></th>
+            <th class="has-text-centered"><abbr title="Taxa de Entrega">Tax E</abbr></th>
+            <th class="has-text-centered"><abbr title="Desconto">Desc</abbr></th>
             <th class="has-text-centered"><abbr title="Valor Total">Val</abbr></th>
-            <th class="has-text-centered"><abbr title="Tax Entrega">Tax Entrega</abbr></th>
             <th colspan="2"></th>
           </tr>
         </thead>
@@ -382,8 +384,10 @@
               <td class="has-text-right is-vcentered">${pedido.forma_pag}</td>
               <td class="has-text-right is-vcentered" id="pedidos"></td>
               <td class="has-text-right is-vcentered"> ${formatDateToDDMMYYYY(secondsToDate(pedido.dtPedido))}</td>
-              <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.valorTotal)}</td>
+              <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.valProdutos)}</td>
               <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.taxEntrega)}</td>
+              <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.valDesc)}</td>
+              <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.valorTotal)}</td>
               <td class="has-text-centered is-vcentered" id="delbut" num-ped="${pedido.id}"><i class='bx bxs-trash-alt' style='font-size:24px'></i></td>
               <td class="has-text-centered is-vcentered" id="printbut" num-ped="${pedido.id}"><i class='bx bxs-printer' style='font-size:24px'></i></td>
           </tr>`
@@ -528,6 +532,8 @@
       formData.append('taxEntrega', document.querySelector("#taxEntrega").value)
       formData.append('produtos', JSON.stringify(produtosSelecionados)); // Convertendo produtosSelecionados para JSON
       formData.append('valorTotal', total);
+      formData.append('valDesc', document.querySelector("#taxDesconto").value);
+      formData.append('valProdutos', totalProdSelec);
 
       // Enviar o formulário para o servidor
       sendFormToServer(formData);
