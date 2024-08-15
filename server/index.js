@@ -137,7 +137,7 @@ app.post('/newProduto', multerErrorHandler, async (req, res) => {
 });
 
 app.post('/newPedido', upload.single('file'), async (req, res) => {
-    const { cliente_id, forma_pag, produtos ,valorTotal,dtPedido,taxEntrega,valDesc,valProdutos} = req.body;
+    const { cliente_id, forma_pag, produtos ,valorTotal,dtPedido,taxEntrega,valDesc,valProdutos, obs} = req.body;
     const data = {
         cliente_id: cliente_id,
         forma_pag: forma_pag,
@@ -146,7 +146,8 @@ app.post('/newPedido', upload.single('file'), async (req, res) => {
         dtPedido:dtPedido,
         taxEntrega : taxEntrega,
         valDesc : valDesc,
-        valProdutos : valProdutos
+        valProdutos : valProdutos,
+        obs : obs
     };
 
     try {
@@ -170,6 +171,7 @@ app.get("/export",async (req,res) => {
     const getTableData = async (tableName) => {
         let data = await readRecords(tableName);
         let finalData = [];
+        let taxEntregaFora,descontoFora
     
         data.forEach(item => {
             if (item.dtnasc !== undefined) {
@@ -178,6 +180,8 @@ app.get("/export",async (req,res) => {
             if (item.dtPedido !== undefined) {
                 item.dtPedido = formatDateToDDMMYYYY(secondsToDate(item.dtPedido));
             }
+            taxEntregaFora = item.taxEntrega
+            descontoFora = item.valDesc
             if (item.cliente_id !== undefined) {
                 clientes.forEach(cliente => {
                     if (cliente.id == item.cliente_id) {
@@ -186,9 +190,13 @@ app.get("/export",async (req,res) => {
                             id: item.id,
                             nome_cliente: cliente.nome, // Renomeando 'cliente_id' para 'nome_cliente'
                             forma_pag: item.forma_pag,
+                            obs : item.obs,
                             produtos: item.produtos,
-                            valorTotal: item.valorTotal,
-                            dtPedido: item.dtPedido
+                            dtPedido: item.dtPedido,
+                            valProdutos : item.valProdutos,
+                            taxEntrega : formatarValor(item.taxEntrega),
+                            valDesc : formatarValor(item.valDesc),
+                            valorTotal: formatarValor(item.valorTotal)
                         };
                     }
                 });
@@ -202,7 +210,8 @@ app.get("/export",async (req,res) => {
                         if (prodbd.id == produtoId) {
                             let newItem = { ...item }; // Clone the item
                             newItem.produtos = `${jsonData[produtoId]} - ${prodbd.descricao}`;
-                            newItem.valorTotal = `${prodbd.valor * jsonData[produtoId]}`
+                            console.log(item.taxEntrega)
+                            newItem.valorTotal = `${formatarValor((prodbd.valor * jsonData[produtoId]) + taxEntregaFora - descontoFora)}`
                             finalData.push(newItem); // Add the new item to finalData
                         }
                     });
@@ -256,4 +265,14 @@ function multerErrorHandler(req, res, next) {
         }
         next();
     });
+}
+
+function formatarValor(valor) {
+    // Converte o valor para um número com duas casas decimais
+    let valorFormatado = parseFloat(valor).toFixed(2);
+
+    // Substitui o ponto decimal por uma vírgula
+    valorFormatado = valorFormatado.replace('.', ',');
+
+    return valorFormatado;
 }

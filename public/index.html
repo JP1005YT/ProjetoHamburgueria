@@ -136,7 +136,7 @@
           </tr>
         </thead>
         <tfoot>
-          <th colspan="11" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
+          <th colspan="12" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
         <tbody id="allPediddos"></tbody>
       </table>
     </div>
@@ -233,13 +233,14 @@
     document.querySelector("#taxDesconto").addEventListener("focusout",(e) => {
       TotalCalc()
     })
-    function changeMode(){
+    function changeMode(mode){
       if(modoNovo){
         document.querySelector("#novoPedido").classList.remove("active")
         document.querySelector("#novoPedido").classList.add("disable")
         document.querySelector("#listaPedido").classList.remove("disable")
         document.querySelector("#listaPedido").classList.add("active")
         modoNovo = false
+        window.localStorage.setItem("newPedido",false)
         document.querySelector("#switchButton").innerHTML = "Novo Pedido"
       }else{
         document.querySelector("#novoPedido").classList.remove("disable")
@@ -247,6 +248,7 @@
         document.querySelector("#listaPedido").classList.remove("active")
         document.querySelector("#listaPedido").classList.add("disable")
         modoNovo = true
+        window.localStorage.setItem("newPedido",true)
         document.querySelector("#switchButton").innerHTML = "Meus Pedido"
       }
     }
@@ -387,6 +389,7 @@
               <td class="is-vcentered">${pedido.id}</td>
               <td class="has-text-right is-vcentered">${nome}</td>
               <td class="has-text-right is-vcentered">${pedido.forma_pag}</td>
+              <td class="has-text-right is-vcentered">${pedido.obs || 'Não há'}</td>
               <td class="has-text-right is-vcentered" id="pedidos"></td>
               <td class="has-text-right is-vcentered"> ${formatDateToDDMMYYYY(secondsToDate(pedido.dtPedido))}</td>
               <td class="has-text-right is-vcentered"> ${formatarParaMoeda(pedido.valProdutos)}</td>
@@ -432,8 +435,20 @@
     async function SalvarCliente(){
       const formData = new FormData(document.querySelector("#formNew"))
       const data = Object.fromEntries(formData.entries());
+      let breaka = false
 
       data.dtnasc = dateToSeconds(data.dtnasc)
+
+      clienteData.forEach(cliente => {
+        if(cliente.telefone == data.telefone){
+          breaka = true
+        }
+      })
+
+      if(breaka){
+        alert("cliente já cadastrado!")
+        return
+      }
 
       async function sendToServer(data){
         const result = fetch('./../newClient', {
@@ -531,6 +546,7 @@
       const formData = new FormData();
       formData.append('cliente_id', clienteElement.value);
       formData.append('forma_pag', paymentModeElement.value);
+      formData.append('obs', document.querySelector("#obs").value);
       formData.append('dtPedido', dateToSeconds(isoString))
       formData.append('taxEntrega', document.querySelector("#taxEntrega").value)
       formData.append('produtos', JSON.stringify(produtosSelecionados)); // Convertendo produtosSelecionados para JSON
@@ -681,7 +697,7 @@
         endereco : clientToPrint.endereco,
         telefone : clientToPrint.telefone,
         pag_method : orderToPrint.forma_pag,
-        obs: '',
+        obs: orderToPrint.obs,
         produtoscupom : produtosParaImprimir,
         valTotal: formatarParaMoeda(orderToPrint.valorTotal),
         datetime : formatarData()
@@ -694,15 +710,25 @@
       const janela = window.open('', '');
 
       if (janela) {
-        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } .img {width:100%;display:flex;align-itens:center;justify-content:center;}}</style></head><body>');
+        janela.document.write(`<html>
+        <head>
+          <title>about:blank</title>
+          <style>
+            h2 { text-align: center; background: #ccc; }
+            h3 { margin: 0px; padding: 0px;}
+            table tr td { text-align: center; } h4, span { text-align: center; }
+            .img {width:100%;display:flex;align-itens:center;justify-content:center;}
+          </style>
+        </head>
+        <body>`);
         janela.document.write(htmlContent);
         janela.document.write('</body></html>');
         janela.document.close();
 
         // Usar setTimeout para garantir que o conteúdo esteja pronto antes de imprimir
         setTimeout(() => {
-            janela.print();
-            janela.close();
+            // janela.print();
+            // janela.close();
         }, 500);
       } else {
           console.error('Não foi possível abrir a nova janela.');
@@ -718,6 +744,7 @@
       <h3>Endereço : {{endereco}}</h3>
       <h3>Telefone : {{telefone}}</h3>
       <h3>Metodo de Pagamento : {{pag_method}}</h3>
+      <hr>
       <h3>Observação : {{obs}}</h3>
       <h2>Total :{{valTotal}}</h2><hr>
         <table width="100%">
@@ -732,12 +759,12 @@
               </tr>
             {{/each}}
         </table><hr>
-        <h4>>>>Segue no Insta QRCode<<<</h3>
+        <h4>Segue no Insta!</h4>
         <div class="img">
           <img src="./qrcode.png" width="30%"></img>
         </div>
-        <h4>>>Obrigado pela Preferencia<<<</h3>
-        <h4>>>Chave PIX 18996775302<<<</h3>
+        <h4>Agradecemos a preferência!</h4>
+        <h4>Chave PIX: 18996775302</h4><br>.
     </div>
   </script>
 </body>
