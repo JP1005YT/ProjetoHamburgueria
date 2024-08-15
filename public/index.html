@@ -125,17 +125,18 @@
             <th class="has-text-centered"><abbr title="Numero do Pedido">N.Ped</abbr></th>
             <th class="has-text-centered"><abbr title="Nome Cliente">Nome Cli</abbr></th>
             <th class="has-text-centered"><abbr title="Metodo de Pagamento">M. Pag</abbr></th>
+            <th class="has-text-centered"><abbr title="Observação">Obs</abbr></th>
             <th class="has-text-centered"><abbr title="Items do Pedido">I. Ped</abbr></th>
             <th class="has-text-centered"><abbr title="Data Pedido">Data Pedido</abbr></th>
-            <th class="has-text-centered"><abbr title="Total Pedidos">T. Ped</abbr></th>
-            <th class="has-text-centered"><abbr title="Taxa de Entrega">Tax E</abbr></th>
-            <th class="has-text-centered"><abbr title="Desconto">Desc</abbr></th>
-            <th class="has-text-centered"><abbr title="Valor Total">Val</abbr></th>
+            <th class="has-text-centered"><abbr title="Total Produtos">T. Prod</abbr></th>
+            <th class="has-text-centered"><abbr title="Valor de Entrega">Val E</abbr></th>
+            <th class="has-text-centered"><abbr title="Valor de Desconto">Val D</abbr></th>
+            <th class="has-text-centered"><abbr title="Valor Total">Val T</abbr></th>
             <th colspan="2"></th>
           </tr>
         </thead>
         <tfoot>
-          <th colspan="9" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
+          <th colspan="11" class="has-text-right" >Total: <span id="quantPedidos">%</span> Pedidos</th>
         <tbody id="allPediddos"></tbody>
       </table>
     </div>
@@ -209,6 +210,7 @@
   </div>
   <script>
     let total = 0
+    let lastId = 0
     let modoNovo = true
     let totalProdSelec = 0
     let clienteData , produtosData , pedidosData
@@ -252,6 +254,9 @@
       window.location.href = './' + local
     }
     async function loadData(){
+      lastId = await fetch("./lastcode").then( resp => resp.json())
+      lastId = lastId[0].seq
+
       const dados = await fetch('./getClientes',{
         method: "GET",
       });
@@ -419,10 +424,8 @@
           })
           document.querySelector("#allPediddos").appendChild(nodeObject)
       })
-      
-      const lastId = await fetch("./lastcode").then( resp => resp.json())
 
-      document.querySelector("#numPedido").innerHTML = lastId[0].seq + 1
+      document.querySelector("#numPedido").innerHTML = lastId + 1
       document.querySelector("#quantPedidos").innerHTML = pedidosData.length
     }
     loadData()
@@ -636,7 +639,74 @@
       }
     }
     async function ImprimirPedido(id){
-      alert(id)
+      let orderToPrint
+      let clientToPrint
+
+      // adquire order
+      pedidosData.forEach(pedido => {
+        if(pedido.id == id){
+          orderToPrint = pedido
+        }else{
+          return
+        }
+      })
+
+      clienteData.forEach(cliente => {
+        if(cliente.id == orderToPrint.cliente_id){
+          clientToPrint = cliente
+        }else{
+          return
+        }
+      })
+
+
+      let produtosAki = JSON.parse(JSON.parse(orderToPrint.produtos))
+      let produtosParaImprimir = []
+
+      Object.keys(produtosAki).forEach(idProduto => {
+        let novoprod = []
+        produtosData.forEach(produto => {
+          if(produto.id == idProduto){
+            novoprod['desc'] = produto.descricao
+          }
+        })
+        novoprod['num'] = produtosAki[idProduto]
+        produtosParaImprimir.push(novoprod)
+      })
+
+
+      const data = {
+        numPedido : id,
+        cliente : clientToPrint.nome,
+        endereco : clientToPrint.endereco,
+        telefone : clientToPrint.telefone,
+        pag_method : orderToPrint.forma_pag,
+        obs: '',
+        produtoscupom : produtosParaImprimir,
+        valTotal: formatarParaMoeda(orderToPrint.valorTotal),
+        datetime : formatarData()
+      }
+
+      const templateScript = document.getElementById('cupom-template').innerHTML;
+      const template = Handlebars.compile(templateScript);
+      const htmlContent = template(data);
+
+      const janela = window.open('', '');
+
+      if (janela) {
+        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } .img {width:100%;display:flex;align-itens:center;justify-content:center;}}</style></head><body>');
+        janela.document.write(htmlContent);
+        janela.document.write('</body></html>');
+        janela.document.close();
+
+        // Usar setTimeout para garantir que o conteúdo esteja pronto antes de imprimir
+        setTimeout(() => {
+            janela.print();
+            janela.close();
+        }, 500);
+      } else {
+          console.error('Não foi possível abrir a nova janela.');
+      }
     }
   </script>
   <script src="main.js"></script>
@@ -662,7 +732,7 @@
               </tr>
             {{/each}}
         </table><hr>
-        <h4>>>Segue no Insta QRCode<<<</h3>
+        <h4>>>>Segue no Insta QRCode<<<</h3>
         <div class="img">
           <img src="./qrcode.png" width="30%"></img>
         </div>
