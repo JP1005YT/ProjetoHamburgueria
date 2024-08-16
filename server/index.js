@@ -191,7 +191,8 @@ app.get("/export",async (req,res) => {
                             nome_cliente: cliente.nome, // Renomeando 'cliente_id' para 'nome_cliente'
                             forma_pag: item.forma_pag,
                             obs : item.obs,
-                            produtos: item.produtos,
+                            qtdItem : 0,
+                            produto: item.produtos,
                             dtPedido: item.dtPedido,
                             valProdutos : item.valProdutos,
                             taxEntrega : formatarValor(item.taxEntrega),
@@ -201,21 +202,22 @@ app.get("/export",async (req,res) => {
                     }
                 });
             }
-            if (item.produtos) {
-                let jsonData = JSON.parse(JSON.parse(item.produtos));
+            if (item.produto) {
+                let jsonData = JSON.parse(JSON.parse(item.produto));
                 let idProdutos = Object.keys(jsonData);
     
                 idProdutos.forEach(produtoId => {
                     produtos.forEach(prodbd => {
                         if (prodbd.id == produtoId) {
                             let newItem = { ...item }; // Clone the item
-                            newItem.produtos = `${jsonData[produtoId]} - ${prodbd.descricao}`;
-                            console.log(item.taxEntrega)
-                            newItem.valorTotal = `${formatarValor((prodbd.valor * jsonData[produtoId]) + taxEntregaFora - descontoFora)}`
+                            newItem.qtdItem = jsonData[produtoId]
+                            newItem.produto = prodbd.descricao
+                            newItem.valProdutos = `${formatarValor((prodbd.valor * jsonData[produtoId]))}`
                             finalData.push(newItem); // Add the new item to finalData
                         }
                     });
                 });
+                console.log(item)
             } else {
                 finalData.push(item); // If no products, add the item as is
             }

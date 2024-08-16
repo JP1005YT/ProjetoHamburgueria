@@ -64,8 +64,7 @@
 
 .person-abbottom {
   width: 100%;
-  position: absolute;
-  bottom: 0;
+  margin: 20px;
 }
 
 .person-btn-theme {
