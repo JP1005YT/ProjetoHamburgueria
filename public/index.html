@@ -727,8 +727,8 @@
 
         // Usar setTimeout para garantir que o conteúdo esteja pronto antes de imprimir
         setTimeout(() => {
-            // janela.print();
-            // janela.close();
+            janela.print();
+            janela.close();
         }, 500);
       } else {
           console.error('Não foi possível abrir a nova janela.');
@@ -745,7 +745,7 @@
       <h3>Telefone : {{telefone}}</h3>
       <h3>Metodo de Pagamento : {{pag_method}}</h3>
       <hr>
-      <h3>Observação : {{obs}}</h3>
+      <h3>Observação : {{obs}}</h3><br>
       <h2>Total :{{valTotal}}</h2><hr>
         <table width="100%">
             <tr>
@@ -759,7 +759,7 @@
               </tr>
             {{/each}}
         </table><hr>
-        <h4>Segue no Insta!</h4>
+        <h4 id="segue">Segue no Insta!</h4>
         <div class="img">
           <img src="./qrcode.png" width="30%"></img>
         </div>
