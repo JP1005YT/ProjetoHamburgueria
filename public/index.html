@@ -642,8 +642,20 @@
       const janela = window.open('', '');
 
       if (janela) {
-        janela.document.write('<html><head><title>about:blank</title><style>@media print { h2 { text-align: center; background: #ccc; } table tr td { text-align: center; } h4, span { text-align: center; } .img {width:100%;display:flex;align-itens:center;justify-content:center;}}</style></head><body>');
-        janela.document.write(htmlContent);
+        janela.document.write(`<html>
+        <head>
+          <title>about:blank</title>
+          <style>
+		@media print {
+            		h2 { text-align: center; background: #ccc; }
+            		h3 { margin: 0px; padding: 0px;}
+            		table tr td { text-align: center; } h4, span { text-align: center; }
+            		.img {width:100%;display:flex;align-itens:center;justify-content:center;}
+		}
+          </style>
+        </head>
+        <body>`);
+	janela.document.write(htmlContent);
         janela.document.write('</body></html>');
         janela.document.close();
 
@@ -717,10 +729,12 @@
         <head>
           <title>about:blank</title>
           <style>
-            h2 { text-align: center; background: #ccc; }
-            h3 { margin: 0px; padding: 0px;}
-            table tr td { text-align: center; } h4, span { text-align: center; }
-            .img {width:100%;display:flex;align-itens:center;justify-content:center;}
+		@media print {
+            		h2 { text-align: center; background: #ccc; }
+            		h3 { margin: 0px; padding: 0px;}
+            		table tr td { text-align: center; } h4, span { text-align: center; }
+            		.img {width:100%;display:flex;align-itens:center;justify-content:center;}
+		}
           </style>
         </head>
         <body>`);
