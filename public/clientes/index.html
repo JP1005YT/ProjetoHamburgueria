@@ -91,6 +91,7 @@
       carregarClientes()
     }
     function carregarClientes(){
+      clienteData.reverse()
       clienteData.forEach((cliente,index) => {
         const newTR = document.createElement("tr")
         Object.keys(cliente).forEach(coluna => {

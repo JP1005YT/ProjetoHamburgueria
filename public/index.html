@@ -116,6 +116,13 @@
         </div>
       </form>
   </div>
+  <div class="columns person-abbottom">
+    <div class="column"></div>
+    <div class="column is-half">
+      <button class="button is-link is-outlined is-large person-w" onclick="changeMode()" id="switchButton">Meus Pedidos</button>
+    </div>
+    <div class="column"></div>
+  </div>
   <div class="container is-widescreen disable" id="listaPedido">
     <div class="box">
       <h1 class="title is-2">Todos Pedidos</h1>
@@ -140,15 +147,9 @@
         <tbody id="allPediddos"></tbody>
       </table>
     </div>
+    
+  </div>
 
-  </div>
-  <div class="columns person-abbottom">
-    <div class="column"></div>
-    <div class="column is-half">
-      <button class="button is-link is-outlined is-large person-w" onclick="changeMode()" id="switchButton">Meus Pedidos</button>
-    </div>
-    <div class="column"></div>
-  </div>
   <div class="modal">
     <div class="modal-background" onclick="switchModal()"></div>
     <div class="modal-card person-modal-card">
@@ -376,6 +377,7 @@
     }
     async function carregarPedidos(){
       document.querySelector("#allPediddos").innerHTML = ""
+      pedidosData.reverse()
       pedidosData.forEach(async (pedido,index) => {
         let nome
         clienteData.forEach(async cliente => {
